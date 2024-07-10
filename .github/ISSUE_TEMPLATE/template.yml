@@ -1,0 +1,36 @@
+name: 新しい機能の実装
+description: 新しい機能の実装に関する報告
+title: "[New Feature] "
+labels: ["enhancement"]
+body:
+  - type: input
+    id: background
+    attributes:
+      label: このタスクが必要な背景
+      description: この機能が必要な理由を説明してください
+      placeholder: "例: ユーザーがログインするときに、ユーザー名とパスワードを入力する必要があります"
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: このタスクの内容
+      description: この機能が何をするのか、どのように実装されるのかを説明してください
+      placeholder: "例: ユーザーがログインするときに、ユーザー名とパスワードを入力するフォームを作成します"
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: このタスクが Done になる条件
+      description: この機能が実装されたときにどのような結果が得られるかを説明してください
+      placeholder: "例: ユーザー名とパスワードをフォームに入力し、ログインボタンをクリックすると、ユーザーがログインできます"
+    validations:
+      required: true
+  - type: textarea
+    id: design-doc
+    attributes:
+      label: 設計書・関連資料
+      description: この機能の設計書や関連資料があればリンクを貼ってください
+      placeholder: "例: https://example.com/design"
+

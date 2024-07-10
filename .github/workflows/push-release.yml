@@ -1,0 +1,137 @@
+name: Automate release
+
+on:
+  issues:
+    types:
+      - opened
+  pull_request:
+    types:
+      - closed
+
+env:
+  DEFAULT_BRANCH: main
+  DEVELOP_BRANCH: develop
+
+jobs:
+  metadata:
+    name: Get metadata
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: refs/heads/${{ env.DEVELOP_BRANCH }}
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Get metadata
+        id: meta
+        run: |
+          echo "version=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
+
+  create_release_pr:
+    name: Create release PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.issue.labels.*.name, 'release') }}
+    needs: metadata
+    env:
+      RELEASE_BRANCH: "release/${{ needs.metadata.outputs.version }}"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: refs/heads/${{ env.DEVELOP_BRANCH }}
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Check if able to create PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COMMITS=$(git log origin/${{ env.DEFAULT_BRANCH }}..origin/${{ env.DEVELOP_BRANCH }} --oneline)
+          if [ -z "$COMMITS" ]; then
+            gh issue close ${{ github.event.issue.number }} -r "not planned" -c "Unable to create PR: No commits between ${{ env.DEFAULT_BRANCH }} and ${{ env.DEVELOP_BRANCH }}"
+            exit 1
+          fi
+
+      - name: "Create branch: ${{ env.RELEASE_BRANCH }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git switch -c ${{ env.RELEASE_BRANCH }}
+          git push -u origin ${{ env.RELEASE_BRANCH }}
+      - name: Create PR body
+        id: pr_body
+        run: |
+          PR_BODY="Opened by CI"
+          PR_BODY+="\n\n${{ github.event.issue.body }}"
+          if [ "${{ github.event_name }}" == "issues" ]; then
+            PR_BODY+="\nClose #${{ github.event.issue.number }}"
+          fi
+          echo "body=${PR_BODY}" >> $GITHUB_OUTPUT
+      - name: Create release pr
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_URL=$(echo -e "${{ steps.pr_body.outputs.body }}" | gh pr create -t "Release ${{ needs.metadata.outputs.version }}" --body-file=- -B ${{ env.DEFAULT_BRANCH }} -H ${{ env.RELEASE_BRANCH }} -l release)
+          echo "url=${PR_URL}" >> $GITHUB_OUTPUT
+      - name: Show job summary
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "# Release PR" >> $GITHUB_STEP_SUMMARY
+          echo ${{ steps.pr.outputs.url }} >> $GITHUB_STEP_SUMMARY
+
+  pr_closed:
+    name: Publish release
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'release') }}
+    needs: metadata
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refs/heads/${{ env.DEFAULT_BRANCH }}
+          fetch-tags: true
+      - name: Create and push tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a ${{ needs.metadata.outputs.version }} -m "[CI] Release ${{ needs.metadata.outputs.version }} #${{ github.event.pull_request.number }}"
+          git push --tags origin
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        id: release
+        with:
+          tag_name: ${{ needs.metadata.outputs.version }}
+          generate_release_notes: true
+
+      - name: Comment release information on PR and issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COMMENT_BODY="Release ${{ needs.metadata.outputs.version }} has been published. ${{ steps.release.outputs.url }}"
+          echo $COMMENT_BODY | gh pr comment ${{ github.event.pull_request.number }} --body-file=-
+          ISSUE_NUM=$(gh pr view ${{ github.event.pull_request.number }} --json body --jq '.body | capture("Close #(?<number>[0-9]+)") | .number')
+          if [ -n "$ISSUE_NUM" ]; then
+            echo $COMMENT_BODY | gh issue comment $ISSUE_NUM --body-file=-
+          else
+            echo "No linked issue found"
+          fi
+      - name: Show job summary
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "# Release ${{ needs.metadata.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          gh release view ${{ needs.metadata.outputs.version }} --json "body" --jq ".body" >> $GITHUB_STEP_SUMMARY
+          echo "Release URL: ${{ steps.release.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+
