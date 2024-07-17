@@ -24,7 +24,8 @@ body:
     attributes:
       label: このタスクが Done になる条件
       description: この機能が実装されたときにどのような結果が得られるかを説明してください
-      placeholder: "例: ユーザー名とパスワードをフォームに入力し、ログインボタンをクリックすると、ユーザーがログインできます"
+      placeholder: "例: - [ ] ユーザー名とパスワードをフォームに入力し、ログインボタンをクリックすると、ユーザーがログインできます"
+      value: Sample value
   - type: textarea
     id: design-doc
     attributes:
