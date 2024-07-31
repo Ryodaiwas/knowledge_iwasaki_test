@@ -222,7 +222,11 @@ provider "aws" {
 #   description = "AWS load balancer DNS Name"
 # }
 
-
+# このmoduleを宣言していないと、module.ecr.ecr_repository_urlが見つからないというエラーが発生します。
+# これは、module.ecr.ecr_repository_urlがmodule.ecrで定義されているためです。module.ecrを宣言することで、module.ecr.ecr_repository_urlを使用できるようになります。
+module "ecr" {
+  source = "../../modules/ecr"
+}
 module "vpc" {
   source = "../../modules/vpc"
 
@@ -231,11 +235,15 @@ module "iam" {
   source = "../../modules/iam"
 }
 module "ecs" {
-  source = "../../modules/ecs"
+  source             = "../../modules/ecs"
+  ecr_repository_url = module.ecr.ecr_repository_url
+  iam_role_arn       = module.iam.iam_role_arn
+  security_group_id  = module.alb.security_group_id
+  target_group_arn   = module.alb.target_group_arn
+  subnets            = module.vpc.subnets
 }
 module "alb" {
   source  = "../../modules/alb"
-  subnets = module.vpc.public_subnet_ids
-  # vpc_id  = aws_default_vpc.default_vpc.id
-  vpc_id = module.vpc.vpc_id
+  subnets = module.vpc.subnets
+  vpc_id  = module.vpc.vpc_id
 }
