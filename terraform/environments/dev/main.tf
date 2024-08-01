@@ -2,11 +2,11 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.60.0"
+      version = "~> 5.60.0" #AWSバージョンの固定
     }
   }
 
-  required_version = ">= 1.2.0"
+  required_version = ">= 1.2.0" # Terraformバージョンの固定
 }
 
 provider "aws" {
