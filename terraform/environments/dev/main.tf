@@ -39,6 +39,11 @@ module "alb" {
   vpc_id  = module.vpc.vpc_id
 }
 
+
+
+
+
+
 # # Creating an ECR Repository
 # resource "aws_ecr_repository" "knowledgebase-test-ecr-repo" {
 #   name                 = "knowledgebase-test-ecr-repo"
