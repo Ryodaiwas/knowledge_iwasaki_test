@@ -31,12 +31,14 @@ module "ecs" {
   iam_role_arn       = module.iam.iam_role_arn
   security_group_id  = module.alb.security_group_id
   target_group_arn   = module.alb.target_group_arn
-  subnets            = module.vpc.subnets
+  private_subnet_ids = module.vpc.public_subnet_ids
+  vpc_id             = module.vpc.vpc_id
 }
+
 module "alb" {
-  source  = "../../modules/alb"
-  subnets = module.vpc.subnets
-  vpc_id  = module.vpc.vpc_id
+  source            = "../../modules/alb"
+  public_subnet_ids = module.vpc.public_subnet_ids
+  vpc_id            = module.vpc.vpc_id
 }
 
 

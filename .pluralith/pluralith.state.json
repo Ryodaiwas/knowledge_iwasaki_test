@@ -1,0 +1,4124 @@
+[{
+ "applyable": false,
+ "complete": true,
+ "configuration": {
+  "provider_config": {
+   "aws": {
+    "expressions": {
+     "profile": {
+      "constant_value": "default"
+     },
+     "region": {
+      "constant_value": "ap-northeast-1"
+     }
+    },
+    "full_name": "registry.terraform.io/hashicorp/aws",
+    "name": "aws",
+    "version_constraint": "~\u003e 5.60.0"
+   },
+   "null": {
+    "full_name": "registry.terraform.io/hashicorp/null",
+    "name": "null"
+   }
+  },
+  "root_module": {
+   "outputs": {
+    "lb_dns": {
+     "description": "AWS load balancer DNS Name",
+     "expression": {
+      "references": [
+       "aws_alb.knowledgebase-test-lb.dns_name",
+       "aws_alb.knowledgebase-test-lb"
+      ]
+     }
+    }
+   },
+   "resources": [
+    {
+     "address": "aws_alb.knowledgebase-test-lb",
+     "expressions": {
+      "load_balancer_type": {
+       "constant_value": "application"
+      },
+      "name": {
+       "constant_value": "knowledgebase-test-lb"
+      },
+      "security_groups": {
+       "references": [
+        "aws_security_group.knowledgebase-test-lb_security_group.id",
+        "aws_security_group.knowledgebase-test-lb_security_group"
+       ]
+      },
+      "subnets": {
+       "references": [
+        "aws_default_subnet.default_subnet_a.id",
+        "aws_default_subnet.default_subnet_a",
+        "aws_default_subnet.default_subnet_d.id",
+        "aws_default_subnet.default_subnet_d",
+        "aws_default_subnet.default_subnet_c.id",
+        "aws_default_subnet.default_subnet_c"
+       ]
+      }
+     },
+     "mode": "managed",
+     "name": "knowledgebase-test-lb",
+     "provider_config_key": "aws",
+     "schema_version": 0,
+     "type": "aws_alb"
+    },
+    {
+     "address": "aws_default_subnet.default_subnet_a",
+     "expressions": {
+      "availability_zone": {
+       "constant_value": "ap-northeast-1a"
+      }
+     },
+     "mode": "managed",
+     "name": "default_subnet_a",
+     "provider_config_key": "aws",
+     "schema_version": 1,
+     "type": "aws_default_subnet"
+    },
+    {
+     "address": "aws_default_subnet.default_subnet_c",
+     "expressions": {
+      "availability_zone": {
+       "constant_value": "ap-northeast-1c"
+      }
+     },
+     "mode": "managed",
+     "name": "default_subnet_c",
+     "provider_config_key": "aws",
+     "schema_version": 1,
+     "type": "aws_default_subnet"
+    },
+    {
+     "address": "aws_default_subnet.default_subnet_d",
+     "expressions": {
+      "availability_zone": {
+       "constant_value": "ap-northeast-1d"
+      }
+     },
+     "mode": "managed",
+     "name": "default_subnet_d",
+     "provider_config_key": "aws",
+     "schema_version": 1,
+     "type": "aws_default_subnet"
+    },
+    {
+     "address": "aws_default_vpc.default_vpc",
+     "mode": "managed",
+     "name": "default_vpc",
+     "provider_config_key": "aws",
+     "schema_version": 1,
+     "type": "aws_default_vpc"
+    },
+    {
+     "address": "aws_ecr_repository.knowledgebase-test-ecr-repo",
+     "expressions": {
+      "force_delete": {
+       "constant_value": true
+      },
+      "image_scanning_configuration": [
+       {
+        "scan_on_push": {
+         "constant_value": true
+        }
+       }
+      ],
+      "image_tag_mutability": {
+       "constant_value": "MUTABLE"
+      },
+      "name": {
+       "constant_value": "knowledgebase-test-ecr-repo"
+      }
+     },
+     "mode": "managed",
+     "name": "knowledgebase-test-ecr-repo",
+     "provider_config_key": "aws",
+     "schema_version": 0,
+     "type": "aws_ecr_repository"
+    },
+    {
+     "address": "aws_ecs_cluster.knowledgebase-test-cluster",
+     "expressions": {
+      "name": {
+       "constant_value": "knowledgebase-test-cluster"
+      }
+     },
+     "mode": "managed",
+     "name": "knowledgebase-test-cluster",
+     "provider_config_key": "aws",
+     "schema_version": 0,
+     "type": "aws_ecs_cluster"
+    },
+    {
+     "address": "aws_ecs_service.knowledgebase-test-service",
+     "expressions": {
+      "cluster": {
+       "references": [
+        "aws_ecs_cluster.knowledgebase-test-cluster.id",
+        "aws_ecs_cluster.knowledgebase-test-cluster"
+       ]
+      },
+      "desired_count": {
+       "constant_value": 3
+      },
+      "launch_type": {
+       "constant_value": "FARGATE"
+      },
+      "load_balancer": [
+       {
+        "container_name": {
+         "constant_value": "knowledgebase-test-container"
+        },
+        "container_port": {
+         "constant_value": 3000
+        },
+        "target_group_arn": {
+         "references": [
+          "aws_lb_target_group.knowledgebase-test-target_group.arn",
+          "aws_lb_target_group.knowledgebase-test-target_group"
+         ]
+        }
+       }
+      ],
+      "name": {
+       "constant_value": "knowledgebase-test-service"
+      },
+      "network_configuration": [
+       {
+        "assign_public_ip": {
+         "constant_value": true
+        },
+        "security_groups": {
+         "references": [
+          "aws_security_group.knowledgebase-test-service_security_group.id",
+          "aws_security_group.knowledgebase-test-service_security_group"
+         ]
+        },
+        "subnets": {
+         "references": [
+          "aws_default_subnet.default_subnet_a.id",
+          "aws_default_subnet.default_subnet_a",
+          "aws_default_subnet.default_subnet_d.id",
+          "aws_default_subnet.default_subnet_d",
+          "aws_default_subnet.default_subnet_c.id",
+          "aws_default_subnet.default_subnet_c"
+         ]
+        }
+       }
+      ],
+      "task_definition": {
+       "references": [
+        "aws_ecs_task_definition.knowledgebase-test-task-test.arn",
+        "aws_ecs_task_definition.knowledgebase-test-task-test"
+       ]
+      }
+     },
+     "mode": "managed",
+     "name": "knowledgebase-test-service",
+     "provider_config_key": "aws",
+     "schema_version": 1,
+     "type": "aws_ecs_service"
+    },
+    {
+     "address": "aws_ecs_task_definition.knowledgebase-test-task-test",
+     "expressions": {
+      "container_definitions": {
+       "references": [
+        "aws_ecr_repository.knowledgebase-test-ecr-repo.repository_url",
+        "aws_ecr_repository.knowledgebase-test-ecr-repo"
+       ]
+      },
+      "cpu": {
+       "constant_value": 256
+      },
+      "execution_role_arn": {
+       "references": [
+        "aws_iam_role.ecsTaskExecutionRole.arn",
+        "aws_iam_role.ecsTaskExecutionRole"
+       ]
+      },
+      "family": {
+       "constant_value": "knowledgebase-test-task-test"
+      },
+      "memory": {
+       "constant_value": 512
+      },
+      "network_mode": {
+       "constant_value": "awsvpc"
+      },
+      "requires_compatibilities": {
+       "constant_value": [
+        "FARGATE"
+       ]
+      }
+     },
+     "mode": "managed",
+     "name": "knowledgebase-test-task-test",
+     "provider_config_key": "aws",
+     "schema_version": 1,
+     "type": "aws_ecs_task_definition"
+    },
+    {
+     "address": "aws_iam_role.ecsTaskExecutionRole",
+     "expressions": {
+      "assume_role_policy": {
+       "references": [
+        "data.aws_iam_policy_document.assume_role_policy.json",
+        "data.aws_iam_policy_document.assume_role_policy"
+       ]
+      },
+      "name": {
+       "constant_value": "ecsTaskExecutionRole"
+      }
+     },
+     "mode": "managed",
+     "name": "ecsTaskExecutionRole",
+     "provider_config_key": "aws",
+     "schema_version": 0,
+     "type": "aws_iam_role"
+    },
+    {
+     "address": "aws_iam_role_policy_attachment.ecsTaskExecutionRole_policy",
+     "expressions": {
+      "policy_arn": {
+       "constant_value": "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+      },
+      "role": {
+       "references": [
+        "aws_iam_role.ecsTaskExecutionRole.name",
+        "aws_iam_role.ecsTaskExecutionRole"
+       ]
+      }
+     },
+     "mode": "managed",
+     "name": "ecsTaskExecutionRole_policy",
+     "provider_config_key": "aws",
+     "schema_version": 0,
+     "type": "aws_iam_role_policy_attachment"
+    },
+    {
+     "address": "aws_lb_listener.knowledgebase-test-listener",
+     "expressions": {
+      "default_action": [
+       {
+        "target_group_arn": {
+         "references": [
+          "aws_lb_target_group.knowledgebase-test-target_group.arn",
+          "aws_lb_target_group.knowledgebase-test-target_group"
+         ]
+        },
+        "type": {
+         "constant_value": "forward"
+        }
+       }
+      ],
+      "load_balancer_arn": {
+       "references": [
+        "aws_alb.knowledgebase-test-lb.arn",
+        "aws_alb.knowledgebase-test-lb"
+       ]
+      },
+      "port": {
+       "constant_value": "80"
+      },
+      "protocol": {
+       "constant_value": "HTTP"
+      }
+     },
+     "mode": "managed",
+     "name": "knowledgebase-test-listener",
+     "provider_config_key": "aws",
+     "schema_version": 0,
+     "type": "aws_lb_listener"
+    },
+    {
+     "address": "aws_lb_target_group.knowledgebase-test-target_group",
+     "expressions": {
+      "health_check": [
+       {
+        "matcher": {
+         "constant_value": "200,301,302"
+        },
+        "path": {
+         "constant_value": "/"
+        }
+       }
+      ],
+      "name": {
+       "constant_value": "target-group"
+      },
+      "port": {
+       "constant_value": 80
+      },
+      "protocol": {
+       "constant_value": "HTTP"
+      },
+      "target_type": {
+       "constant_value": "ip"
+      },
+      "vpc_id": {
+       "references": [
+        "aws_default_vpc.default_vpc.id",
+        "aws_default_vpc.default_vpc"
+       ]
+      }
+     },
+     "mode": "managed",
+     "name": "knowledgebase-test-target_group",
+     "provider_config_key": "aws",
+     "schema_version": 0,
+     "type": "aws_lb_target_group"
+    },
+    {
+     "address": "aws_security_group.knowledgebase-test-lb_security_group",
+     "expressions": {
+      "egress": {
+       "constant_value": [
+        {
+         "cidr_blocks": [
+          "0.0.0.0/0"
+         ],
+         "description": null,
+         "from_port": 0,
+         "ipv6_cidr_blocks": null,
+         "prefix_list_ids": null,
+         "protocol": "-1",
+         "security_groups": null,
+         "self": null,
+         "to_port": 0
+        }
+       ]
+      },
+      "ingress": {
+       "constant_value": [
+        {
+         "cidr_blocks": [
+          "0.0.0.0/0"
+         ],
+         "description": null,
+         "from_port": 80,
+         "ipv6_cidr_blocks": null,
+         "prefix_list_ids": null,
+         "protocol": "tcp",
+         "security_groups": null,
+         "self": null,
+         "to_port": 80
+        }
+       ]
+      }
+     },
+     "mode": "managed",
+     "name": "knowledgebase-test-lb_security_group",
+     "provider_config_key": "aws",
+     "schema_version": 1,
+     "type": "aws_security_group"
+    },
+    {
+     "address": "aws_security_group.knowledgebase-test-service_security_group",
+     "expressions": {
+      "egress": {
+       "constant_value": [
+        {
+         "cidr_blocks": [
+          "0.0.0.0/0"
+         ],
+         "description": null,
+         "from_port": 0,
+         "ipv6_cidr_blocks": null,
+         "prefix_list_ids": null,
+         "protocol": "-1",
+         "security_groups": null,
+         "self": null,
+         "to_port": 0
+        }
+       ]
+      },
+      "ingress": {
+       "references": [
+        "aws_security_group.knowledgebase-test-lb_security_group.id",
+        "aws_security_group.knowledgebase-test-lb_security_group"
+       ]
+      }
+     },
+     "mode": "managed",
+     "name": "knowledgebase-test-service_security_group",
+     "provider_config_key": "aws",
+     "schema_version": 1,
+     "type": "aws_security_group"
+    },
+    {
+     "address": "null_resource.image",
+     "expressions": {
+      "triggers": {}
+     },
+     "mode": "managed",
+     "name": "image",
+     "provider_config_key": "null",
+     "provisioners": [
+      {
+       "expressions": {
+        "command": {
+         "references": [
+          "local.repo_url",
+          "local.repo_url",
+          "local.repo_url"
+         ]
+        }
+       },
+       "type": "local-exec"
+      }
+     ],
+     "schema_version": 0,
+     "type": "null_resource"
+    },
+    {
+     "address": "data.aws_ecr_image.latest",
+     "depends_on": [
+      "null_resource.image"
+     ],
+     "expressions": {
+      "image_tag": {
+       "constant_value": "latest"
+      },
+      "repository_name": {
+       "references": [
+        "aws_ecr_repository.knowledgebase-test-ecr-repo.name",
+        "aws_ecr_repository.knowledgebase-test-ecr-repo"
+       ]
+      }
+     },
+     "mode": "data",
+     "name": "latest",
+     "provider_config_key": "aws",
+     "schema_version": 0,
+     "type": "aws_ecr_image"
+    },
+    {
+     "address": "data.aws_iam_policy_document.assume_role_policy",
+     "expressions": {
+      "statement": [
+       {
+        "actions": {
+         "constant_value": [
+          "sts:AssumeRole"
+         ]
+        },
+        "principals": [
+         {
+          "identifiers": {
+           "constant_value": [
+            "ecs-tasks.amazonaws.com"
+           ]
+          },
+          "type": {
+           "constant_value": "Service"
+          }
+         }
+        ]
+       }
+      ]
+     },
+     "mode": "data",
+     "name": "assume_role_policy",
+     "provider_config_key": "aws",
+     "schema_version": 0,
+     "type": "aws_iam_policy_document"
+    }
+   ]
+  }
+ },
+ "errored": false,
+ "format_version": "1.2",
+ "output_changes": {
+  "lb_dns": {
+   "actions": [
+    "no-op"
+   ],
+   "after": "knowledgebase-test-lb-24604960.ap-northeast-1.elb.amazonaws.com",
+   "after_sensitive": false,
+   "after_unknown": false,
+   "before": "knowledgebase-test-lb-24604960.ap-northeast-1.elb.amazonaws.com",
+   "before_sensitive": false
+  }
+ },
+ "planned_values": {
+  "outputs": {
+   "lb_dns": {
+    "sensitive": false,
+    "type": "string",
+    "value": "knowledgebase-test-lb-24604960.ap-northeast-1.elb.amazonaws.com"
+   }
+  },
+  "root_module": {
+   "resources": [
+    {
+     "address": "aws_alb.knowledgebase-test-lb",
+     "mode": "managed",
+     "name": "knowledgebase-test-lb",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 0,
+     "sensitive_values": {
+      "access_logs": [
+       {}
+      ],
+      "connection_logs": [
+       {}
+      ],
+      "security_groups": [
+       false
+      ],
+      "subnet_mapping": [
+       {},
+       {},
+       {}
+      ],
+      "subnets": [
+       false,
+       false,
+       false
+      ],
+      "tags": {},
+      "tags_all": {}
+     },
+     "type": "aws_alb",
+     "values": {
+      "access_logs": [
+       {
+        "bucket": "",
+        "enabled": false,
+        "prefix": ""
+       }
+      ],
+      "arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297",
+      "arn_suffix": "app/knowledgebase-test-lb/15e166681053a297",
+      "client_keep_alive": 3600,
+      "connection_logs": [
+       {
+        "bucket": "",
+        "enabled": false,
+        "prefix": ""
+       }
+      ],
+      "customer_owned_ipv4_pool": "",
+      "desync_mitigation_mode": "defensive",
+      "dns_name": "knowledgebase-test-lb-24604960.ap-northeast-1.elb.amazonaws.com",
+      "dns_record_client_routing_policy": null,
+      "drop_invalid_header_fields": false,
+      "enable_cross_zone_load_balancing": true,
+      "enable_deletion_protection": false,
+      "enable_http2": true,
+      "enable_tls_version_and_cipher_suite_headers": false,
+      "enable_waf_fail_open": false,
+      "enable_xff_client_port": false,
+      "enforce_security_group_inbound_rules_on_private_link_traffic": "",
+      "id": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297",
+      "idle_timeout": 60,
+      "internal": false,
+      "ip_address_type": "ipv4",
+      "load_balancer_type": "application",
+      "name": "knowledgebase-test-lb",
+      "name_prefix": "",
+      "preserve_host_header": false,
+      "security_groups": [
+       "sg-0cc4661b5a4e1bc6a"
+      ],
+      "subnet_mapping": [
+       {
+        "allocation_id": "",
+        "ipv6_address": "",
+        "outpost_id": "",
+        "private_ipv4_address": "",
+        "subnet_id": "subnet-03511174557ef01ad"
+       },
+       {
+        "allocation_id": "",
+        "ipv6_address": "",
+        "outpost_id": "",
+        "private_ipv4_address": "",
+        "subnet_id": "subnet-077e6e2807068fdbb"
+       },
+       {
+        "allocation_id": "",
+        "ipv6_address": "",
+        "outpost_id": "",
+        "private_ipv4_address": "",
+        "subnet_id": "subnet-0bd41c517de205bc7"
+       }
+      ],
+      "subnets": [
+       "subnet-03511174557ef01ad",
+       "subnet-077e6e2807068fdbb",
+       "subnet-0bd41c517de205bc7"
+      ],
+      "tags": {},
+      "tags_all": {},
+      "timeouts": null,
+      "vpc_id": "vpc-00b90228bcacafe5a",
+      "xff_header_processing_mode": "append",
+      "zone_id": "Z14GRHDCWA56QT"
+     }
+    },
+    {
+     "address": "aws_default_subnet.default_subnet_a",
+     "mode": "managed",
+     "name": "default_subnet_a",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 1,
+     "sensitive_values": {
+      "tags": {},
+      "tags_all": {}
+     },
+     "type": "aws_default_subnet",
+     "values": {
+      "arn": "arn:aws:ec2:ap-northeast-1:767398123553:subnet/subnet-077e6e2807068fdbb",
+      "assign_ipv6_address_on_creation": false,
+      "availability_zone": "ap-northeast-1a",
+      "availability_zone_id": "apne1-az4",
+      "cidr_block": "172.31.32.0/20",
+      "customer_owned_ipv4_pool": "",
+      "enable_dns64": false,
+      "enable_lni_at_device_index": 0,
+      "enable_resource_name_dns_a_record_on_launch": false,
+      "enable_resource_name_dns_aaaa_record_on_launch": false,
+      "existing_default_subnet": true,
+      "force_destroy": false,
+      "id": "subnet-077e6e2807068fdbb",
+      "ipv6_cidr_block": "",
+      "ipv6_cidr_block_association_id": "",
+      "ipv6_native": false,
+      "map_customer_owned_ip_on_launch": false,
+      "map_public_ip_on_launch": true,
+      "outpost_arn": "",
+      "owner_id": "767398123553",
+      "private_dns_hostname_type_on_launch": "ip-name",
+      "tags": {},
+      "tags_all": {},
+      "timeouts": null,
+      "vpc_id": "vpc-00b90228bcacafe5a"
+     }
+    },
+    {
+     "address": "aws_default_subnet.default_subnet_c",
+     "mode": "managed",
+     "name": "default_subnet_c",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 1,
+     "sensitive_values": {
+      "tags": {},
+      "tags_all": {}
+     },
+     "type": "aws_default_subnet",
+     "values": {
+      "arn": "arn:aws:ec2:ap-northeast-1:767398123553:subnet/subnet-0bd41c517de205bc7",
+      "assign_ipv6_address_on_creation": false,
+      "availability_zone": "ap-northeast-1c",
+      "availability_zone_id": "apne1-az1",
+      "cidr_block": "172.31.0.0/20",
+      "customer_owned_ipv4_pool": "",
+      "enable_dns64": false,
+      "enable_lni_at_device_index": 0,
+      "enable_resource_name_dns_a_record_on_launch": false,
+      "enable_resource_name_dns_aaaa_record_on_launch": false,
+      "existing_default_subnet": true,
+      "force_destroy": false,
+      "id": "subnet-0bd41c517de205bc7",
+      "ipv6_cidr_block": "",
+      "ipv6_cidr_block_association_id": "",
+      "ipv6_native": false,
+      "map_customer_owned_ip_on_launch": false,
+      "map_public_ip_on_launch": true,
+      "outpost_arn": "",
+      "owner_id": "767398123553",
+      "private_dns_hostname_type_on_launch": "ip-name",
+      "tags": {},
+      "tags_all": {},
+      "timeouts": null,
+      "vpc_id": "vpc-00b90228bcacafe5a"
+     }
+    },
+    {
+     "address": "aws_default_subnet.default_subnet_d",
+     "mode": "managed",
+     "name": "default_subnet_d",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 1,
+     "sensitive_values": {
+      "tags": {},
+      "tags_all": {}
+     },
+     "type": "aws_default_subnet",
+     "values": {
+      "arn": "arn:aws:ec2:ap-northeast-1:767398123553:subnet/subnet-03511174557ef01ad",
+      "assign_ipv6_address_on_creation": false,
+      "availability_zone": "ap-northeast-1d",
+      "availability_zone_id": "apne1-az2",
+      "cidr_block": "172.31.16.0/20",
+      "customer_owned_ipv4_pool": "",
+      "enable_dns64": false,
+      "enable_lni_at_device_index": 0,
+      "enable_resource_name_dns_a_record_on_launch": false,
+      "enable_resource_name_dns_aaaa_record_on_launch": false,
+      "existing_default_subnet": true,
+      "force_destroy": false,
+      "id": "subnet-03511174557ef01ad",
+      "ipv6_cidr_block": "",
+      "ipv6_cidr_block_association_id": "",
+      "ipv6_native": false,
+      "map_customer_owned_ip_on_launch": false,
+      "map_public_ip_on_launch": true,
+      "outpost_arn": "",
+      "owner_id": "767398123553",
+      "private_dns_hostname_type_on_launch": "ip-name",
+      "tags": {},
+      "tags_all": {},
+      "timeouts": null,
+      "vpc_id": "vpc-00b90228bcacafe5a"
+     }
+    },
+    {
+     "address": "aws_default_vpc.default_vpc",
+     "mode": "managed",
+     "name": "default_vpc",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 1,
+     "sensitive_values": {
+      "tags": {},
+      "tags_all": {}
+     },
+     "type": "aws_default_vpc",
+     "values": {
+      "arn": "arn:aws:ec2:ap-northeast-1:767398123553:vpc/vpc-00b90228bcacafe5a",
+      "assign_generated_ipv6_cidr_block": false,
+      "cidr_block": "172.31.0.0/16",
+      "default_network_acl_id": "acl-0768eee27070f0817",
+      "default_route_table_id": "rtb-06d0a7a5041a59787",
+      "default_security_group_id": "sg-0864bbdfef129cb53",
+      "dhcp_options_id": "dopt-073165e62c1aab7a5",
+      "enable_dns_hostnames": true,
+      "enable_dns_support": true,
+      "enable_network_address_usage_metrics": false,
+      "existing_default_vpc": true,
+      "force_destroy": false,
+      "id": "vpc-00b90228bcacafe5a",
+      "instance_tenancy": "default",
+      "ipv6_association_id": "",
+      "ipv6_cidr_block": "",
+      "ipv6_cidr_block_network_border_group": "",
+      "ipv6_ipam_pool_id": "",
+      "ipv6_netmask_length": 0,
+      "main_route_table_id": "rtb-06d0a7a5041a59787",
+      "owner_id": "767398123553",
+      "tags": {},
+      "tags_all": {}
+     }
+    },
+    {
+     "address": "aws_ecr_repository.knowledgebase-test-ecr-repo",
+     "mode": "managed",
+     "name": "knowledgebase-test-ecr-repo",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 0,
+     "sensitive_values": {
+      "encryption_configuration": [
+       {}
+      ],
+      "image_scanning_configuration": [
+       {}
+      ],
+      "tags": {},
+      "tags_all": {}
+     },
+     "type": "aws_ecr_repository",
+     "values": {
+      "arn": "arn:aws:ecr:ap-northeast-1:767398123553:repository/knowledgebase-test-ecr-repo",
+      "encryption_configuration": [
+       {
+        "encryption_type": "AES256",
+        "kms_key": ""
+       }
+      ],
+      "force_delete": true,
+      "id": "knowledgebase-test-ecr-repo",
+      "image_scanning_configuration": [
+       {
+        "scan_on_push": true
+       }
+      ],
+      "image_tag_mutability": "MUTABLE",
+      "name": "knowledgebase-test-ecr-repo",
+      "registry_id": "767398123553",
+      "repository_url": "767398123553.dkr.ecr.ap-northeast-1.amazonaws.com/knowledgebase-test-ecr-repo",
+      "tags": {},
+      "tags_all": {},
+      "timeouts": null
+     }
+    },
+    {
+     "address": "aws_ecs_cluster.knowledgebase-test-cluster",
+     "mode": "managed",
+     "name": "knowledgebase-test-cluster",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 0,
+     "sensitive_values": {
+      "configuration": [],
+      "service_connect_defaults": [],
+      "setting": [
+       {}
+      ],
+      "tags": {},
+      "tags_all": {}
+     },
+     "type": "aws_ecs_cluster",
+     "values": {
+      "arn": "arn:aws:ecs:ap-northeast-1:767398123553:cluster/knowledgebase-test-cluster",
+      "configuration": [],
+      "id": "arn:aws:ecs:ap-northeast-1:767398123553:cluster/knowledgebase-test-cluster",
+      "name": "knowledgebase-test-cluster",
+      "service_connect_defaults": [],
+      "setting": [
+       {
+        "name": "containerInsights",
+        "value": "disabled"
+       }
+      ],
+      "tags": {},
+      "tags_all": {}
+     }
+    },
+    {
+     "address": "aws_ecs_service.knowledgebase-test-service",
+     "mode": "managed",
+     "name": "knowledgebase-test-service",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 1,
+     "sensitive_values": {
+      "alarms": [],
+      "capacity_provider_strategy": [],
+      "deployment_circuit_breaker": [
+       {}
+      ],
+      "deployment_controller": [
+       {}
+      ],
+      "load_balancer": [
+       {}
+      ],
+      "network_configuration": [
+       {
+        "security_groups": [
+         false
+        ],
+        "subnets": [
+         false,
+         false,
+         false
+        ]
+       }
+      ],
+      "ordered_placement_strategy": [],
+      "placement_constraints": [],
+      "service_connect_configuration": [],
+      "service_registries": [],
+      "tags": {},
+      "tags_all": {},
+      "triggers": {},
+      "volume_configuration": []
+     },
+     "type": "aws_ecs_service",
+     "values": {
+      "alarms": [],
+      "capacity_provider_strategy": [],
+      "cluster": "arn:aws:ecs:ap-northeast-1:767398123553:cluster/knowledgebase-test-cluster",
+      "deployment_circuit_breaker": [
+       {
+        "enable": false,
+        "rollback": false
+       }
+      ],
+      "deployment_controller": [
+       {
+        "type": "ECS"
+       }
+      ],
+      "deployment_maximum_percent": 200,
+      "deployment_minimum_healthy_percent": 100,
+      "desired_count": 3,
+      "enable_ecs_managed_tags": false,
+      "enable_execute_command": false,
+      "force_new_deployment": null,
+      "health_check_grace_period_seconds": 0,
+      "iam_role": "/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+      "id": "arn:aws:ecs:ap-northeast-1:767398123553:service/knowledgebase-test-cluster/knowledgebase-test-service",
+      "launch_type": "FARGATE",
+      "load_balancer": [
+       {
+        "container_name": "knowledgebase-test-container",
+        "container_port": 3000,
+        "elb_name": "",
+        "target_group_arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215"
+       }
+      ],
+      "name": "knowledgebase-test-service",
+      "network_configuration": [
+       {
+        "assign_public_ip": true,
+        "security_groups": [
+         "sg-08fe9627476cdad8b"
+        ],
+        "subnets": [
+         "subnet-03511174557ef01ad",
+         "subnet-077e6e2807068fdbb",
+         "subnet-0bd41c517de205bc7"
+        ]
+       }
+      ],
+      "ordered_placement_strategy": [],
+      "placement_constraints": [],
+      "platform_version": "LATEST",
+      "propagate_tags": "NONE",
+      "scheduling_strategy": "REPLICA",
+      "service_connect_configuration": [],
+      "service_registries": [],
+      "tags": {},
+      "tags_all": {},
+      "task_definition": "arn:aws:ecs:ap-northeast-1:767398123553:task-definition/knowledgebase-test-task-test:2",
+      "timeouts": null,
+      "triggers": {},
+      "volume_configuration": [],
+      "wait_for_steady_state": false
+     }
+    },
+    {
+     "address": "aws_ecs_task_definition.knowledgebase-test-task-test",
+     "mode": "managed",
+     "name": "knowledgebase-test-task-test",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 1,
+     "sensitive_values": {
+      "ephemeral_storage": [],
+      "inference_accelerator": [],
+      "placement_constraints": [],
+      "proxy_configuration": [],
+      "requires_compatibilities": [
+       false
+      ],
+      "runtime_platform": [],
+      "tags": {},
+      "tags_all": {},
+      "volume": []
+     },
+     "type": "aws_ecs_task_definition",
+     "values": {
+      "arn": "arn:aws:ecs:ap-northeast-1:767398123553:task-definition/knowledgebase-test-task-test:2",
+      "arn_without_revision": "arn:aws:ecs:ap-northeast-1:767398123553:task-definition/knowledgebase-test-task-test",
+      "container_definitions": "[{\"Command\":null,\"Cpu\":256,\"CredentialSpecs\":null,\"DependsOn\":null,\"DisableNetworking\":null,\"DnsSearchDomains\":null,\"DnsServers\":null,\"DockerLabels\":null,\"DockerSecurityOptions\":null,\"EntryPoint\":null,\"Environment\":[],\"EnvironmentFiles\":null,\"Essential\":true,\"ExtraHosts\":null,\"FirelensConfiguration\":null,\"HealthCheck\":null,\"Hostname\":null,\"Image\":\"767398123553.dkr.ecr.ap-northeast-1.amazonaws.com/knowledgebase-test-ecr-repo\",\"Interactive\":null,\"Links\":null,\"LinuxParameters\":null,\"LogConfiguration\":null,\"Memory\":512,\"MemoryReservation\":null,\"MountPoints\":[],\"Name\":\"knowledgebase-test-container\",\"PortMappings\":[{\"AppProtocol\":\"\",\"ContainerPort\":3000,\"ContainerPortRange\":null,\"HostPort\":3000,\"Name\":null,\"Protocol\":\"tcp\"}],\"Privileged\":null,\"PseudoTerminal\":null,\"ReadonlyRootFilesystem\":null,\"RepositoryCredentials\":null,\"ResourceRequirements\":null,\"Secrets\":null,\"StartTimeout\":null,\"StopTimeout\":null,\"SystemControls\":[],\"Ulimits\":null,\"User\":null,\"VolumesFrom\":[],\"WorkingDirectory\":null}]\n",
+      "cpu": "256",
+      "ephemeral_storage": [],
+      "execution_role_arn": "arn:aws:iam::767398123553:role/ecsTaskExecutionRole",
+      "family": "knowledgebase-test-task-test",
+      "id": "knowledgebase-test-task-test",
+      "inference_accelerator": [],
+      "ipc_mode": "",
+      "memory": "512",
+      "network_mode": "awsvpc",
+      "pid_mode": "",
+      "placement_constraints": [],
+      "proxy_configuration": [],
+      "requires_compatibilities": [
+       "FARGATE"
+      ],
+      "revision": 2,
+      "runtime_platform": [],
+      "skip_destroy": false,
+      "tags": {},
+      "tags_all": {},
+      "task_role_arn": "",
+      "track_latest": false,
+      "volume": []
+     }
+    },
+    {
+     "address": "aws_iam_role.ecsTaskExecutionRole",
+     "mode": "managed",
+     "name": "ecsTaskExecutionRole",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 0,
+     "sensitive_values": {
+      "inline_policy": [],
+      "managed_policy_arns": [
+       false
+      ],
+      "tags": {},
+      "tags_all": {}
+     },
+     "type": "aws_iam_role",
+     "values": {
+      "arn": "arn:aws:iam::767398123553:role/ecsTaskExecutionRole",
+      "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ecs-tasks.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+      "create_date": "2024-07-30T05:45:12Z",
+      "description": "",
+      "force_detach_policies": false,
+      "id": "ecsTaskExecutionRole",
+      "inline_policy": [],
+      "managed_policy_arns": [
+       "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+      ],
+      "max_session_duration": 3600,
+      "name": "ecsTaskExecutionRole",
+      "name_prefix": "",
+      "path": "/",
+      "permissions_boundary": "",
+      "tags": {},
+      "tags_all": {},
+      "unique_id": "AROA3FLD6DAQ5GUH6X3H5"
+     }
+    },
+    {
+     "address": "aws_iam_role_policy_attachment.ecsTaskExecutionRole_policy",
+     "mode": "managed",
+     "name": "ecsTaskExecutionRole_policy",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 0,
+     "sensitive_values": {},
+     "type": "aws_iam_role_policy_attachment",
+     "values": {
+      "id": "ecsTaskExecutionRole-20240730054510496200000002",
+      "policy_arn": "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
+      "role": "ecsTaskExecutionRole"
+     }
+    },
+    {
+     "address": "aws_lb_listener.knowledgebase-test-listener",
+     "mode": "managed",
+     "name": "knowledgebase-test-listener",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 0,
+     "sensitive_values": {
+      "default_action": [
+       {
+        "authenticate_cognito": [],
+        "authenticate_oidc": [],
+        "fixed_response": [],
+        "forward": [],
+        "redirect": []
+       }
+      ],
+      "mutual_authentication": [],
+      "tags": {},
+      "tags_all": {}
+     },
+     "type": "aws_lb_listener",
+     "values": {
+      "alpn_policy": null,
+      "arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:listener/app/knowledgebase-test-lb/15e166681053a297/60d0cea49229eb4f",
+      "certificate_arn": null,
+      "default_action": [
+       {
+        "authenticate_cognito": [],
+        "authenticate_oidc": [],
+        "fixed_response": [],
+        "forward": [],
+        "order": 1,
+        "redirect": [],
+        "target_group_arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215",
+        "type": "forward"
+       }
+      ],
+      "id": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:listener/app/knowledgebase-test-lb/15e166681053a297/60d0cea49229eb4f",
+      "load_balancer_arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297",
+      "mutual_authentication": [],
+      "port": 80,
+      "protocol": "HTTP",
+      "ssl_policy": "",
+      "tags": {},
+      "tags_all": {},
+      "timeouts": null
+     }
+    },
+    {
+     "address": "aws_lb_target_group.knowledgebase-test-target_group",
+     "mode": "managed",
+     "name": "knowledgebase-test-target_group",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 0,
+     "sensitive_values": {
+      "health_check": [
+       {}
+      ],
+      "load_balancer_arns": [
+       false
+      ],
+      "stickiness": [
+       {}
+      ],
+      "tags": {},
+      "tags_all": {},
+      "target_failover": [
+       {}
+      ],
+      "target_group_health": [
+       {
+        "dns_failover": [
+         {}
+        ],
+        "unhealthy_state_routing": [
+         {}
+        ]
+       }
+      ],
+      "target_health_state": [
+       {}
+      ]
+     },
+     "type": "aws_lb_target_group",
+     "values": {
+      "arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215",
+      "arn_suffix": "targetgroup/target-group/cce3f43127ebf215",
+      "connection_termination": null,
+      "deregistration_delay": "300",
+      "health_check": [
+       {
+        "enabled": true,
+        "healthy_threshold": 3,
+        "interval": 30,
+        "matcher": "200,301,302",
+        "path": "/",
+        "port": "traffic-port",
+        "protocol": "HTTP",
+        "timeout": 5,
+        "unhealthy_threshold": 3
+       }
+      ],
+      "id": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215",
+      "ip_address_type": "ipv4",
+      "lambda_multi_value_headers_enabled": false,
+      "load_balancer_arns": [
+       "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297"
+      ],
+      "load_balancing_algorithm_type": "round_robin",
+      "load_balancing_anomaly_mitigation": "off",
+      "load_balancing_cross_zone_enabled": "use_load_balancer_configuration",
+      "name": "target-group",
+      "name_prefix": "",
+      "port": 80,
+      "preserve_client_ip": null,
+      "protocol": "HTTP",
+      "protocol_version": "HTTP1",
+      "proxy_protocol_v2": false,
+      "slow_start": 0,
+      "stickiness": [
+       {
+        "cookie_duration": 86400,
+        "cookie_name": "",
+        "enabled": false,
+        "type": "lb_cookie"
+       }
+      ],
+      "tags": {},
+      "tags_all": {},
+      "target_failover": [
+       {
+        "on_deregistration": null,
+        "on_unhealthy": null
+       }
+      ],
+      "target_group_health": [
+       {
+        "dns_failover": [
+         {
+          "minimum_healthy_targets_count": "1",
+          "minimum_healthy_targets_percentage": "off"
+         }
+        ],
+        "unhealthy_state_routing": [
+         {
+          "minimum_healthy_targets_count": 1,
+          "minimum_healthy_targets_percentage": "off"
+         }
+        ]
+       }
+      ],
+      "target_health_state": [
+       {
+        "enable_unhealthy_connection_termination": null
+       }
+      ],
+      "target_type": "ip",
+      "vpc_id": "vpc-00b90228bcacafe5a"
+     }
+    },
+    {
+     "address": "aws_security_group.knowledgebase-test-lb_security_group",
+     "mode": "managed",
+     "name": "knowledgebase-test-lb_security_group",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 1,
+     "sensitive_values": {
+      "egress": [
+       {
+        "cidr_blocks": [
+         false
+        ],
+        "ipv6_cidr_blocks": [],
+        "prefix_list_ids": [],
+        "security_groups": []
+       }
+      ],
+      "ingress": [
+       {
+        "cidr_blocks": [
+         false
+        ],
+        "ipv6_cidr_blocks": [],
+        "prefix_list_ids": [],
+        "security_groups": []
+       }
+      ],
+      "tags": {},
+      "tags_all": {}
+     },
+     "type": "aws_security_group",
+     "values": {
+      "arn": "arn:aws:ec2:ap-northeast-1:767398123553:security-group/sg-0cc4661b5a4e1bc6a",
+      "description": "Managed by Terraform",
+      "egress": [
+       {
+        "cidr_blocks": [
+         "0.0.0.0/0"
+        ],
+        "description": "",
+        "from_port": 0,
+        "ipv6_cidr_blocks": [],
+        "prefix_list_ids": [],
+        "protocol": "-1",
+        "security_groups": [],
+        "self": false,
+        "to_port": 0
+       }
+      ],
+      "id": "sg-0cc4661b5a4e1bc6a",
+      "ingress": [
+       {
+        "cidr_blocks": [
+         "0.0.0.0/0"
+        ],
+        "description": "",
+        "from_port": 80,
+        "ipv6_cidr_blocks": [],
+        "prefix_list_ids": [],
+        "protocol": "tcp",
+        "security_groups": [],
+        "self": false,
+        "to_port": 80
+       }
+      ],
+      "name": "terraform-20240730054508261100000001",
+      "name_prefix": "terraform-",
+      "owner_id": "767398123553",
+      "revoke_rules_on_delete": false,
+      "tags": {},
+      "tags_all": {},
+      "timeouts": null,
+      "vpc_id": "vpc-00b90228bcacafe5a"
+     }
+    },
+    {
+     "address": "aws_security_group.knowledgebase-test-service_security_group",
+     "mode": "managed",
+     "name": "knowledgebase-test-service_security_group",
+     "provider_name": "registry.terraform.io/hashicorp/aws",
+     "schema_version": 1,
+     "sensitive_values": {
+      "egress": [
+       {
+        "cidr_blocks": [
+         false
+        ],
+        "ipv6_cidr_blocks": [],
+        "prefix_list_ids": [],
+        "security_groups": []
+       }
+      ],
+      "ingress": [
+       {
+        "cidr_blocks": [],
+        "ipv6_cidr_blocks": [],
+        "prefix_list_ids": [],
+        "security_groups": [
+         false
+        ]
+       }
+      ],
+      "tags": {},
+      "tags_all": {}
+     },
+     "type": "aws_security_group",
+     "values": {
+      "arn": "arn:aws:ec2:ap-northeast-1:767398123553:security-group/sg-08fe9627476cdad8b",
+      "description": "Managed by Terraform",
+      "egress": [
+       {
+        "cidr_blocks": [
+         "0.0.0.0/0"
+        ],
+        "description": "",
+        "from_port": 0,
+        "ipv6_cidr_blocks": [],
+        "prefix_list_ids": [],
+        "protocol": "-1",
+        "security_groups": [],
+        "self": false,
+        "to_port": 0
+       }
+      ],
+      "id": "sg-08fe9627476cdad8b",
+      "ingress": [
+       {
+        "cidr_blocks": [],
+        "description": "",
+        "from_port": 0,
+        "ipv6_cidr_blocks": [],
+        "prefix_list_ids": [],
+        "protocol": "-1",
+        "security_groups": [
+         "sg-0cc4661b5a4e1bc6a"
+        ],
+        "self": false,
+        "to_port": 0
+       }
+      ],
+      "name": "terraform-20240730054510625400000003",
+      "name_prefix": "terraform-",
+      "owner_id": "767398123553",
+      "revoke_rules_on_delete": false,
+      "tags": {},
+      "tags_all": {},
+      "timeouts": null,
+      "vpc_id": "vpc-00b90228bcacafe5a"
+     }
+    },
+    {
+     "address": "null_resource.image",
+     "mode": "managed",
+     "name": "image",
+     "provider_name": "registry.terraform.io/hashicorp/null",
+     "schema_version": 0,
+     "sensitive_values": {
+      "triggers": {}
+     },
+     "type": "null_resource",
+     "values": {
+      "id": "7790535555631926185",
+      "triggers": {
+       "hash": "c2dee6706a1ca23ca60788757dbb1436"
+      }
+     }
+    }
+   ]
+  }
+ },
+ "prior_state": {
+  "format_version": "1.0",
+  "terraform_version": "1.9.1",
+  "values": {
+   "outputs": {
+    "lb_dns": {
+     "sensitive": false,
+     "type": "string",
+     "value": "knowledgebase-test-lb-24604960.ap-northeast-1.elb.amazonaws.com"
+    }
+   },
+   "root_module": {
+    "resources": [
+     {
+      "address": "data.aws_ecr_image.latest",
+      "mode": "data",
+      "name": "latest",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 0,
+      "sensitive_values": {
+       "image_tags": [
+        false
+       ]
+      },
+      "type": "aws_ecr_image",
+      "values": {
+       "id": "sha256:fb33ff9c625e88240a88b758dd92fa89194c2083b8a1c4dbb76c17e3dc554fb4",
+       "image_digest": "sha256:fb33ff9c625e88240a88b758dd92fa89194c2083b8a1c4dbb76c17e3dc554fb4",
+       "image_pushed_at": 1722318450,
+       "image_size_in_bytes": 81203755,
+       "image_tag": "latest",
+       "image_tags": [
+        "latest"
+       ],
+       "image_uri": "767398123553.dkr.ecr.ap-northeast-1.amazonaws.com/knowledgebase-test-ecr-repo@sha256:fb33ff9c625e88240a88b758dd92fa89194c2083b8a1c4dbb76c17e3dc554fb4",
+       "most_recent": null,
+       "registry_id": "767398123553",
+       "repository_name": "knowledgebase-test-ecr-repo"
+      }
+     },
+     {
+      "address": "data.aws_iam_policy_document.assume_role_policy",
+      "mode": "data",
+      "name": "assume_role_policy",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 0,
+      "sensitive_values": {
+       "statement": [
+        {
+         "actions": [
+          false
+         ],
+         "condition": [],
+         "not_actions": [],
+         "not_principals": [],
+         "not_resources": [],
+         "principals": [
+          {
+           "identifiers": [
+            false
+           ]
+          }
+         ],
+         "resources": []
+        }
+       ]
+      },
+      "type": "aws_iam_policy_document",
+      "values": {
+       "id": "1077804475",
+       "json": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ecs-tasks.amazonaws.com\"\n      }\n    }\n  ]\n}",
+       "minified_json": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":\"sts:AssumeRole\",\"Principal\":{\"Service\":\"ecs-tasks.amazonaws.com\"}}]}",
+       "override_json": null,
+       "override_policy_documents": null,
+       "policy_id": null,
+       "source_json": null,
+       "source_policy_documents": null,
+       "statement": [
+        {
+         "actions": [
+          "sts:AssumeRole"
+         ],
+         "condition": [],
+         "effect": "Allow",
+         "not_actions": [],
+         "not_principals": [],
+         "not_resources": [],
+         "principals": [
+          {
+           "identifiers": [
+            "ecs-tasks.amazonaws.com"
+           ],
+           "type": "Service"
+          }
+         ],
+         "resources": [],
+         "sid": ""
+        }
+       ],
+       "version": "2012-10-17"
+      }
+     },
+     {
+      "address": "aws_alb.knowledgebase-test-lb",
+      "depends_on": [
+       "aws_default_subnet.default_subnet_a",
+       "aws_default_subnet.default_subnet_c",
+       "aws_default_subnet.default_subnet_d",
+       "aws_security_group.knowledgebase-test-lb_security_group"
+      ],
+      "mode": "managed",
+      "name": "knowledgebase-test-lb",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 0,
+      "sensitive_values": {
+       "access_logs": [
+        {}
+       ],
+       "connection_logs": [
+        {}
+       ],
+       "security_groups": [
+        false
+       ],
+       "subnet_mapping": [
+        {},
+        {},
+        {}
+       ],
+       "subnets": [
+        false,
+        false,
+        false
+       ],
+       "tags": {},
+       "tags_all": {}
+      },
+      "type": "aws_alb",
+      "values": {
+       "access_logs": [
+        {
+         "bucket": "",
+         "enabled": false,
+         "prefix": ""
+        }
+       ],
+       "arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297",
+       "arn_suffix": "app/knowledgebase-test-lb/15e166681053a297",
+       "client_keep_alive": 3600,
+       "connection_logs": [
+        {
+         "bucket": "",
+         "enabled": false,
+         "prefix": ""
+        }
+       ],
+       "customer_owned_ipv4_pool": "",
+       "desync_mitigation_mode": "defensive",
+       "dns_name": "knowledgebase-test-lb-24604960.ap-northeast-1.elb.amazonaws.com",
+       "dns_record_client_routing_policy": null,
+       "drop_invalid_header_fields": false,
+       "enable_cross_zone_load_balancing": true,
+       "enable_deletion_protection": false,
+       "enable_http2": true,
+       "enable_tls_version_and_cipher_suite_headers": false,
+       "enable_waf_fail_open": false,
+       "enable_xff_client_port": false,
+       "enforce_security_group_inbound_rules_on_private_link_traffic": "",
+       "id": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297",
+       "idle_timeout": 60,
+       "internal": false,
+       "ip_address_type": "ipv4",
+       "load_balancer_type": "application",
+       "name": "knowledgebase-test-lb",
+       "name_prefix": "",
+       "preserve_host_header": false,
+       "security_groups": [
+        "sg-0cc4661b5a4e1bc6a"
+       ],
+       "subnet_mapping": [
+        {
+         "allocation_id": "",
+         "ipv6_address": "",
+         "outpost_id": "",
+         "private_ipv4_address": "",
+         "subnet_id": "subnet-03511174557ef01ad"
+        },
+        {
+         "allocation_id": "",
+         "ipv6_address": "",
+         "outpost_id": "",
+         "private_ipv4_address": "",
+         "subnet_id": "subnet-077e6e2807068fdbb"
+        },
+        {
+         "allocation_id": "",
+         "ipv6_address": "",
+         "outpost_id": "",
+         "private_ipv4_address": "",
+         "subnet_id": "subnet-0bd41c517de205bc7"
+        }
+       ],
+       "subnets": [
+        "subnet-03511174557ef01ad",
+        "subnet-077e6e2807068fdbb",
+        "subnet-0bd41c517de205bc7"
+       ],
+       "tags": {},
+       "tags_all": {},
+       "timeouts": null,
+       "vpc_id": "vpc-00b90228bcacafe5a",
+       "xff_header_processing_mode": "append",
+       "zone_id": "Z14GRHDCWA56QT"
+      }
+     },
+     {
+      "address": "aws_default_subnet.default_subnet_a",
+      "mode": "managed",
+      "name": "default_subnet_a",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 1,
+      "sensitive_values": {
+       "tags": {},
+       "tags_all": {}
+      },
+      "type": "aws_default_subnet",
+      "values": {
+       "arn": "arn:aws:ec2:ap-northeast-1:767398123553:subnet/subnet-077e6e2807068fdbb",
+       "assign_ipv6_address_on_creation": false,
+       "availability_zone": "ap-northeast-1a",
+       "availability_zone_id": "apne1-az4",
+       "cidr_block": "172.31.32.0/20",
+       "customer_owned_ipv4_pool": "",
+       "enable_dns64": false,
+       "enable_lni_at_device_index": 0,
+       "enable_resource_name_dns_a_record_on_launch": false,
+       "enable_resource_name_dns_aaaa_record_on_launch": false,
+       "existing_default_subnet": true,
+       "force_destroy": false,
+       "id": "subnet-077e6e2807068fdbb",
+       "ipv6_cidr_block": "",
+       "ipv6_cidr_block_association_id": "",
+       "ipv6_native": false,
+       "map_customer_owned_ip_on_launch": false,
+       "map_public_ip_on_launch": true,
+       "outpost_arn": "",
+       "owner_id": "767398123553",
+       "private_dns_hostname_type_on_launch": "ip-name",
+       "tags": {},
+       "tags_all": {},
+       "timeouts": null,
+       "vpc_id": "vpc-00b90228bcacafe5a"
+      }
+     },
+     {
+      "address": "aws_default_subnet.default_subnet_c",
+      "mode": "managed",
+      "name": "default_subnet_c",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 1,
+      "sensitive_values": {
+       "tags": {},
+       "tags_all": {}
+      },
+      "type": "aws_default_subnet",
+      "values": {
+       "arn": "arn:aws:ec2:ap-northeast-1:767398123553:subnet/subnet-0bd41c517de205bc7",
+       "assign_ipv6_address_on_creation": false,
+       "availability_zone": "ap-northeast-1c",
+       "availability_zone_id": "apne1-az1",
+       "cidr_block": "172.31.0.0/20",
+       "customer_owned_ipv4_pool": "",
+       "enable_dns64": false,
+       "enable_lni_at_device_index": 0,
+       "enable_resource_name_dns_a_record_on_launch": false,
+       "enable_resource_name_dns_aaaa_record_on_launch": false,
+       "existing_default_subnet": true,
+       "force_destroy": false,
+       "id": "subnet-0bd41c517de205bc7",
+       "ipv6_cidr_block": "",
+       "ipv6_cidr_block_association_id": "",
+       "ipv6_native": false,
+       "map_customer_owned_ip_on_launch": false,
+       "map_public_ip_on_launch": true,
+       "outpost_arn": "",
+       "owner_id": "767398123553",
+       "private_dns_hostname_type_on_launch": "ip-name",
+       "tags": {},
+       "tags_all": {},
+       "timeouts": null,
+       "vpc_id": "vpc-00b90228bcacafe5a"
+      }
+     },
+     {
+      "address": "aws_default_subnet.default_subnet_d",
+      "mode": "managed",
+      "name": "default_subnet_d",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 1,
+      "sensitive_values": {
+       "tags": {},
+       "tags_all": {}
+      },
+      "type": "aws_default_subnet",
+      "values": {
+       "arn": "arn:aws:ec2:ap-northeast-1:767398123553:subnet/subnet-03511174557ef01ad",
+       "assign_ipv6_address_on_creation": false,
+       "availability_zone": "ap-northeast-1d",
+       "availability_zone_id": "apne1-az2",
+       "cidr_block": "172.31.16.0/20",
+       "customer_owned_ipv4_pool": "",
+       "enable_dns64": false,
+       "enable_lni_at_device_index": 0,
+       "enable_resource_name_dns_a_record_on_launch": false,
+       "enable_resource_name_dns_aaaa_record_on_launch": false,
+       "existing_default_subnet": true,
+       "force_destroy": false,
+       "id": "subnet-03511174557ef01ad",
+       "ipv6_cidr_block": "",
+       "ipv6_cidr_block_association_id": "",
+       "ipv6_native": false,
+       "map_customer_owned_ip_on_launch": false,
+       "map_public_ip_on_launch": true,
+       "outpost_arn": "",
+       "owner_id": "767398123553",
+       "private_dns_hostname_type_on_launch": "ip-name",
+       "tags": {},
+       "tags_all": {},
+       "timeouts": null,
+       "vpc_id": "vpc-00b90228bcacafe5a"
+      }
+     },
+     {
+      "address": "aws_default_vpc.default_vpc",
+      "mode": "managed",
+      "name": "default_vpc",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 1,
+      "sensitive_values": {
+       "tags": {},
+       "tags_all": {}
+      },
+      "type": "aws_default_vpc",
+      "values": {
+       "arn": "arn:aws:ec2:ap-northeast-1:767398123553:vpc/vpc-00b90228bcacafe5a",
+       "assign_generated_ipv6_cidr_block": false,
+       "cidr_block": "172.31.0.0/16",
+       "default_network_acl_id": "acl-0768eee27070f0817",
+       "default_route_table_id": "rtb-06d0a7a5041a59787",
+       "default_security_group_id": "sg-0864bbdfef129cb53",
+       "dhcp_options_id": "dopt-073165e62c1aab7a5",
+       "enable_dns_hostnames": true,
+       "enable_dns_support": true,
+       "enable_network_address_usage_metrics": false,
+       "existing_default_vpc": true,
+       "force_destroy": false,
+       "id": "vpc-00b90228bcacafe5a",
+       "instance_tenancy": "default",
+       "ipv6_association_id": "",
+       "ipv6_cidr_block": "",
+       "ipv6_cidr_block_network_border_group": "",
+       "ipv6_ipam_pool_id": "",
+       "ipv6_netmask_length": 0,
+       "main_route_table_id": "rtb-06d0a7a5041a59787",
+       "owner_id": "767398123553",
+       "tags": {},
+       "tags_all": {}
+      }
+     },
+     {
+      "address": "aws_ecr_repository.knowledgebase-test-ecr-repo",
+      "mode": "managed",
+      "name": "knowledgebase-test-ecr-repo",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 0,
+      "sensitive_values": {
+       "encryption_configuration": [
+        {}
+       ],
+       "image_scanning_configuration": [
+        {}
+       ],
+       "tags": {},
+       "tags_all": {}
+      },
+      "type": "aws_ecr_repository",
+      "values": {
+       "arn": "arn:aws:ecr:ap-northeast-1:767398123553:repository/knowledgebase-test-ecr-repo",
+       "encryption_configuration": [
+        {
+         "encryption_type": "AES256",
+         "kms_key": ""
+        }
+       ],
+       "force_delete": true,
+       "id": "knowledgebase-test-ecr-repo",
+       "image_scanning_configuration": [
+        {
+         "scan_on_push": true
+        }
+       ],
+       "image_tag_mutability": "MUTABLE",
+       "name": "knowledgebase-test-ecr-repo",
+       "registry_id": "767398123553",
+       "repository_url": "767398123553.dkr.ecr.ap-northeast-1.amazonaws.com/knowledgebase-test-ecr-repo",
+       "tags": {},
+       "tags_all": {},
+       "timeouts": null
+      }
+     },
+     {
+      "address": "aws_ecs_cluster.knowledgebase-test-cluster",
+      "mode": "managed",
+      "name": "knowledgebase-test-cluster",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 0,
+      "sensitive_values": {
+       "configuration": [],
+       "service_connect_defaults": [],
+       "setting": [
+        {}
+       ],
+       "tags": {},
+       "tags_all": {}
+      },
+      "type": "aws_ecs_cluster",
+      "values": {
+       "arn": "arn:aws:ecs:ap-northeast-1:767398123553:cluster/knowledgebase-test-cluster",
+       "configuration": [],
+       "id": "arn:aws:ecs:ap-northeast-1:767398123553:cluster/knowledgebase-test-cluster",
+       "name": "knowledgebase-test-cluster",
+       "service_connect_defaults": [],
+       "setting": [
+        {
+         "name": "containerInsights",
+         "value": "disabled"
+        }
+       ],
+       "tags": {},
+       "tags_all": {}
+      }
+     },
+     {
+      "address": "aws_ecs_service.knowledgebase-test-service",
+      "depends_on": [
+       "aws_default_subnet.default_subnet_a",
+       "aws_default_subnet.default_subnet_c",
+       "aws_default_subnet.default_subnet_d",
+       "aws_default_vpc.default_vpc",
+       "aws_ecr_repository.knowledgebase-test-ecr-repo",
+       "aws_ecs_cluster.knowledgebase-test-cluster",
+       "aws_ecs_task_definition.knowledgebase-test-task-test",
+       "aws_iam_role.ecsTaskExecutionRole",
+       "aws_lb_target_group.knowledgebase-test-target_group",
+       "aws_security_group.knowledgebase-test-lb_security_group",
+       "aws_security_group.knowledgebase-test-service_security_group",
+       "data.aws_iam_policy_document.assume_role_policy"
+      ],
+      "mode": "managed",
+      "name": "knowledgebase-test-service",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 1,
+      "sensitive_values": {
+       "alarms": [],
+       "capacity_provider_strategy": [],
+       "deployment_circuit_breaker": [
+        {}
+       ],
+       "deployment_controller": [
+        {}
+       ],
+       "load_balancer": [
+        {}
+       ],
+       "network_configuration": [
+        {
+         "security_groups": [
+          false
+         ],
+         "subnets": [
+          false,
+          false,
+          false
+         ]
+        }
+       ],
+       "ordered_placement_strategy": [],
+       "placement_constraints": [],
+       "service_connect_configuration": [],
+       "service_registries": [],
+       "tags": {},
+       "tags_all": {},
+       "triggers": {},
+       "volume_configuration": []
+      },
+      "type": "aws_ecs_service",
+      "values": {
+       "alarms": [],
+       "capacity_provider_strategy": [],
+       "cluster": "arn:aws:ecs:ap-northeast-1:767398123553:cluster/knowledgebase-test-cluster",
+       "deployment_circuit_breaker": [
+        {
+         "enable": false,
+         "rollback": false
+        }
+       ],
+       "deployment_controller": [
+        {
+         "type": "ECS"
+        }
+       ],
+       "deployment_maximum_percent": 200,
+       "deployment_minimum_healthy_percent": 100,
+       "desired_count": 3,
+       "enable_ecs_managed_tags": false,
+       "enable_execute_command": false,
+       "force_new_deployment": null,
+       "health_check_grace_period_seconds": 0,
+       "iam_role": "/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+       "id": "arn:aws:ecs:ap-northeast-1:767398123553:service/knowledgebase-test-cluster/knowledgebase-test-service",
+       "launch_type": "FARGATE",
+       "load_balancer": [
+        {
+         "container_name": "knowledgebase-test-container",
+         "container_port": 3000,
+         "elb_name": "",
+         "target_group_arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215"
+        }
+       ],
+       "name": "knowledgebase-test-service",
+       "network_configuration": [
+        {
+         "assign_public_ip": true,
+         "security_groups": [
+          "sg-08fe9627476cdad8b"
+         ],
+         "subnets": [
+          "subnet-03511174557ef01ad",
+          "subnet-077e6e2807068fdbb",
+          "subnet-0bd41c517de205bc7"
+         ]
+        }
+       ],
+       "ordered_placement_strategy": [],
+       "placement_constraints": [],
+       "platform_version": "LATEST",
+       "propagate_tags": "NONE",
+       "scheduling_strategy": "REPLICA",
+       "service_connect_configuration": [],
+       "service_registries": [],
+       "tags": {},
+       "tags_all": {},
+       "task_definition": "arn:aws:ecs:ap-northeast-1:767398123553:task-definition/knowledgebase-test-task-test:2",
+       "timeouts": null,
+       "triggers": {},
+       "volume_configuration": [],
+       "wait_for_steady_state": false
+      }
+     },
+     {
+      "address": "aws_ecs_task_definition.knowledgebase-test-task-test",
+      "depends_on": [
+       "aws_ecr_repository.knowledgebase-test-ecr-repo",
+       "aws_iam_role.ecsTaskExecutionRole",
+       "data.aws_iam_policy_document.assume_role_policy"
+      ],
+      "mode": "managed",
+      "name": "knowledgebase-test-task-test",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 1,
+      "sensitive_values": {
+       "ephemeral_storage": [],
+       "inference_accelerator": [],
+       "placement_constraints": [],
+       "proxy_configuration": [],
+       "requires_compatibilities": [
+        false
+       ],
+       "runtime_platform": [],
+       "tags": {},
+       "tags_all": {},
+       "volume": []
+      },
+      "type": "aws_ecs_task_definition",
+      "values": {
+       "arn": "arn:aws:ecs:ap-northeast-1:767398123553:task-definition/knowledgebase-test-task-test:2",
+       "arn_without_revision": "arn:aws:ecs:ap-northeast-1:767398123553:task-definition/knowledgebase-test-task-test",
+       "container_definitions": "[{\"Command\":null,\"Cpu\":256,\"CredentialSpecs\":null,\"DependsOn\":null,\"DisableNetworking\":null,\"DnsSearchDomains\":null,\"DnsServers\":null,\"DockerLabels\":null,\"DockerSecurityOptions\":null,\"EntryPoint\":null,\"Environment\":[],\"EnvironmentFiles\":null,\"Essential\":true,\"ExtraHosts\":null,\"FirelensConfiguration\":null,\"HealthCheck\":null,\"Hostname\":null,\"Image\":\"767398123553.dkr.ecr.ap-northeast-1.amazonaws.com/knowledgebase-test-ecr-repo\",\"Interactive\":null,\"Links\":null,\"LinuxParameters\":null,\"LogConfiguration\":null,\"Memory\":512,\"MemoryReservation\":null,\"MountPoints\":[],\"Name\":\"knowledgebase-test-container\",\"PortMappings\":[{\"AppProtocol\":\"\",\"ContainerPort\":3000,\"ContainerPortRange\":null,\"HostPort\":3000,\"Name\":null,\"Protocol\":\"tcp\"}],\"Privileged\":null,\"PseudoTerminal\":null,\"ReadonlyRootFilesystem\":null,\"RepositoryCredentials\":null,\"ResourceRequirements\":null,\"Secrets\":null,\"StartTimeout\":null,\"StopTimeout\":null,\"SystemControls\":[],\"Ulimits\":null,\"User\":null,\"VolumesFrom\":[],\"WorkingDirectory\":null}]\n",
+       "cpu": "256",
+       "ephemeral_storage": [],
+       "execution_role_arn": "arn:aws:iam::767398123553:role/ecsTaskExecutionRole",
+       "family": "knowledgebase-test-task-test",
+       "id": "knowledgebase-test-task-test",
+       "inference_accelerator": [],
+       "ipc_mode": "",
+       "memory": "512",
+       "network_mode": "awsvpc",
+       "pid_mode": "",
+       "placement_constraints": [],
+       "proxy_configuration": [],
+       "requires_compatibilities": [
+        "FARGATE"
+       ],
+       "revision": 2,
+       "runtime_platform": [],
+       "skip_destroy": false,
+       "tags": {},
+       "tags_all": {},
+       "task_role_arn": "",
+       "track_latest": false,
+       "volume": []
+      }
+     },
+     {
+      "address": "aws_iam_role.ecsTaskExecutionRole",
+      "depends_on": [
+       "data.aws_iam_policy_document.assume_role_policy"
+      ],
+      "mode": "managed",
+      "name": "ecsTaskExecutionRole",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 0,
+      "sensitive_values": {
+       "inline_policy": [],
+       "managed_policy_arns": [
+        false
+       ],
+       "tags": {},
+       "tags_all": {}
+      },
+      "type": "aws_iam_role",
+      "values": {
+       "arn": "arn:aws:iam::767398123553:role/ecsTaskExecutionRole",
+       "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ecs-tasks.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+       "create_date": "2024-07-30T05:45:12Z",
+       "description": "",
+       "force_detach_policies": false,
+       "id": "ecsTaskExecutionRole",
+       "inline_policy": [],
+       "managed_policy_arns": [
+        "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+       ],
+       "max_session_duration": 3600,
+       "name": "ecsTaskExecutionRole",
+       "name_prefix": "",
+       "path": "/",
+       "permissions_boundary": "",
+       "tags": {},
+       "tags_all": {},
+       "unique_id": "AROA3FLD6DAQ5GUH6X3H5"
+      }
+     },
+     {
+      "address": "aws_iam_role_policy_attachment.ecsTaskExecutionRole_policy",
+      "depends_on": [
+       "aws_iam_role.ecsTaskExecutionRole",
+       "data.aws_iam_policy_document.assume_role_policy"
+      ],
+      "mode": "managed",
+      "name": "ecsTaskExecutionRole_policy",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 0,
+      "sensitive_values": {},
+      "type": "aws_iam_role_policy_attachment",
+      "values": {
+       "id": "ecsTaskExecutionRole-20240730054510496200000002",
+       "policy_arn": "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
+       "role": "ecsTaskExecutionRole"
+      }
+     },
+     {
+      "address": "aws_lb_listener.knowledgebase-test-listener",
+      "depends_on": [
+       "aws_alb.knowledgebase-test-lb",
+       "aws_default_subnet.default_subnet_a",
+       "aws_default_subnet.default_subnet_c",
+       "aws_default_subnet.default_subnet_d",
+       "aws_default_vpc.default_vpc",
+       "aws_lb_target_group.knowledgebase-test-target_group",
+       "aws_security_group.knowledgebase-test-lb_security_group"
+      ],
+      "mode": "managed",
+      "name": "knowledgebase-test-listener",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 0,
+      "sensitive_values": {
+       "default_action": [
+        {
+         "authenticate_cognito": [],
+         "authenticate_oidc": [],
+         "fixed_response": [],
+         "forward": [],
+         "redirect": []
+        }
+       ],
+       "mutual_authentication": [],
+       "tags": {},
+       "tags_all": {}
+      },
+      "type": "aws_lb_listener",
+      "values": {
+       "alpn_policy": null,
+       "arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:listener/app/knowledgebase-test-lb/15e166681053a297/60d0cea49229eb4f",
+       "certificate_arn": null,
+       "default_action": [
+        {
+         "authenticate_cognito": [],
+         "authenticate_oidc": [],
+         "fixed_response": [],
+         "forward": [],
+         "order": 1,
+         "redirect": [],
+         "target_group_arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215",
+         "type": "forward"
+        }
+       ],
+       "id": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:listener/app/knowledgebase-test-lb/15e166681053a297/60d0cea49229eb4f",
+       "load_balancer_arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297",
+       "mutual_authentication": [],
+       "port": 80,
+       "protocol": "HTTP",
+       "ssl_policy": "",
+       "tags": {},
+       "tags_all": {},
+       "timeouts": null
+      }
+     },
+     {
+      "address": "aws_lb_target_group.knowledgebase-test-target_group",
+      "depends_on": [
+       "aws_default_vpc.default_vpc"
+      ],
+      "mode": "managed",
+      "name": "knowledgebase-test-target_group",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 0,
+      "sensitive_values": {
+       "health_check": [
+        {}
+       ],
+       "load_balancer_arns": [
+        false
+       ],
+       "stickiness": [
+        {}
+       ],
+       "tags": {},
+       "tags_all": {},
+       "target_failover": [
+        {}
+       ],
+       "target_group_health": [
+        {
+         "dns_failover": [
+          {}
+         ],
+         "unhealthy_state_routing": [
+          {}
+         ]
+        }
+       ],
+       "target_health_state": [
+        {}
+       ]
+      },
+      "type": "aws_lb_target_group",
+      "values": {
+       "arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215",
+       "arn_suffix": "targetgroup/target-group/cce3f43127ebf215",
+       "connection_termination": null,
+       "deregistration_delay": "300",
+       "health_check": [
+        {
+         "enabled": true,
+         "healthy_threshold": 3,
+         "interval": 30,
+         "matcher": "200,301,302",
+         "path": "/",
+         "port": "traffic-port",
+         "protocol": "HTTP",
+         "timeout": 5,
+         "unhealthy_threshold": 3
+        }
+       ],
+       "id": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215",
+       "ip_address_type": "ipv4",
+       "lambda_multi_value_headers_enabled": false,
+       "load_balancer_arns": [
+        "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297"
+       ],
+       "load_balancing_algorithm_type": "round_robin",
+       "load_balancing_anomaly_mitigation": "off",
+       "load_balancing_cross_zone_enabled": "use_load_balancer_configuration",
+       "name": "target-group",
+       "name_prefix": "",
+       "port": 80,
+       "preserve_client_ip": null,
+       "protocol": "HTTP",
+       "protocol_version": "HTTP1",
+       "proxy_protocol_v2": false,
+       "slow_start": 0,
+       "stickiness": [
+        {
+         "cookie_duration": 86400,
+         "cookie_name": "",
+         "enabled": false,
+         "type": "lb_cookie"
+        }
+       ],
+       "tags": {},
+       "tags_all": {},
+       "target_failover": [
+        {
+         "on_deregistration": null,
+         "on_unhealthy": null
+        }
+       ],
+       "target_group_health": [
+        {
+         "dns_failover": [
+          {
+           "minimum_healthy_targets_count": "1",
+           "minimum_healthy_targets_percentage": "off"
+          }
+         ],
+         "unhealthy_state_routing": [
+          {
+           "minimum_healthy_targets_count": 1,
+           "minimum_healthy_targets_percentage": "off"
+          }
+         ]
+        }
+       ],
+       "target_health_state": [
+        {
+         "enable_unhealthy_connection_termination": null
+        }
+       ],
+       "target_type": "ip",
+       "vpc_id": "vpc-00b90228bcacafe5a"
+      }
+     },
+     {
+      "address": "aws_security_group.knowledgebase-test-lb_security_group",
+      "mode": "managed",
+      "name": "knowledgebase-test-lb_security_group",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 1,
+      "sensitive_values": {
+       "egress": [
+        {
+         "cidr_blocks": [
+          false
+         ],
+         "ipv6_cidr_blocks": [],
+         "prefix_list_ids": [],
+         "security_groups": []
+        }
+       ],
+       "ingress": [
+        {
+         "cidr_blocks": [
+          false
+         ],
+         "ipv6_cidr_blocks": [],
+         "prefix_list_ids": [],
+         "security_groups": []
+        }
+       ],
+       "tags": {},
+       "tags_all": {}
+      },
+      "type": "aws_security_group",
+      "values": {
+       "arn": "arn:aws:ec2:ap-northeast-1:767398123553:security-group/sg-0cc4661b5a4e1bc6a",
+       "description": "Managed by Terraform",
+       "egress": [
+        {
+         "cidr_blocks": [
+          "0.0.0.0/0"
+         ],
+         "description": "",
+         "from_port": 0,
+         "ipv6_cidr_blocks": [],
+         "prefix_list_ids": [],
+         "protocol": "-1",
+         "security_groups": [],
+         "self": false,
+         "to_port": 0
+        }
+       ],
+       "id": "sg-0cc4661b5a4e1bc6a",
+       "ingress": [
+        {
+         "cidr_blocks": [
+          "0.0.0.0/0"
+         ],
+         "description": "",
+         "from_port": 80,
+         "ipv6_cidr_blocks": [],
+         "prefix_list_ids": [],
+         "protocol": "tcp",
+         "security_groups": [],
+         "self": false,
+         "to_port": 80
+        }
+       ],
+       "name": "terraform-20240730054508261100000001",
+       "name_prefix": "terraform-",
+       "owner_id": "767398123553",
+       "revoke_rules_on_delete": false,
+       "tags": {},
+       "tags_all": {},
+       "timeouts": null,
+       "vpc_id": "vpc-00b90228bcacafe5a"
+      }
+     },
+     {
+      "address": "aws_security_group.knowledgebase-test-service_security_group",
+      "depends_on": [
+       "aws_security_group.knowledgebase-test-lb_security_group"
+      ],
+      "mode": "managed",
+      "name": "knowledgebase-test-service_security_group",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "schema_version": 1,
+      "sensitive_values": {
+       "egress": [
+        {
+         "cidr_blocks": [
+          false
+         ],
+         "ipv6_cidr_blocks": [],
+         "prefix_list_ids": [],
+         "security_groups": []
+        }
+       ],
+       "ingress": [
+        {
+         "cidr_blocks": [],
+         "ipv6_cidr_blocks": [],
+         "prefix_list_ids": [],
+         "security_groups": [
+          false
+         ]
+        }
+       ],
+       "tags": {},
+       "tags_all": {}
+      },
+      "type": "aws_security_group",
+      "values": {
+       "arn": "arn:aws:ec2:ap-northeast-1:767398123553:security-group/sg-08fe9627476cdad8b",
+       "description": "Managed by Terraform",
+       "egress": [
+        {
+         "cidr_blocks": [
+          "0.0.0.0/0"
+         ],
+         "description": "",
+         "from_port": 0,
+         "ipv6_cidr_blocks": [],
+         "prefix_list_ids": [],
+         "protocol": "-1",
+         "security_groups": [],
+         "self": false,
+         "to_port": 0
+        }
+       ],
+       "id": "sg-08fe9627476cdad8b",
+       "ingress": [
+        {
+         "cidr_blocks": [],
+         "description": "",
+         "from_port": 0,
+         "ipv6_cidr_blocks": [],
+         "prefix_list_ids": [],
+         "protocol": "-1",
+         "security_groups": [
+          "sg-0cc4661b5a4e1bc6a"
+         ],
+         "self": false,
+         "to_port": 0
+        }
+       ],
+       "name": "terraform-20240730054510625400000003",
+       "name_prefix": "terraform-",
+       "owner_id": "767398123553",
+       "revoke_rules_on_delete": false,
+       "tags": {},
+       "tags_all": {},
+       "timeouts": null,
+       "vpc_id": "vpc-00b90228bcacafe5a"
+      }
+     },
+     {
+      "address": "null_resource.image",
+      "depends_on": [
+       "aws_ecr_repository.knowledgebase-test-ecr-repo"
+      ],
+      "mode": "managed",
+      "name": "image",
+      "provider_name": "registry.terraform.io/hashicorp/null",
+      "schema_version": 0,
+      "sensitive_values": {
+       "triggers": {}
+      },
+      "type": "null_resource",
+      "values": {
+       "id": "7790535555631926185",
+       "triggers": {
+        "hash": "c2dee6706a1ca23ca60788757dbb1436"
+       }
+      }
+     }
+    ]
+   }
+  }
+ },
+ "resource_changes": [
+  {
+   "address": "aws_alb.knowledgebase-test-lb",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "access_logs": [
+      {
+       "bucket": "",
+       "enabled": false,
+       "prefix": ""
+      }
+     ],
+     "arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297",
+     "arn_suffix": "app/knowledgebase-test-lb/15e166681053a297",
+     "client_keep_alive": 3600,
+     "connection_logs": [
+      {
+       "bucket": "",
+       "enabled": false,
+       "prefix": ""
+      }
+     ],
+     "customer_owned_ipv4_pool": "",
+     "desync_mitigation_mode": "defensive",
+     "dns_name": "knowledgebase-test-lb-24604960.ap-northeast-1.elb.amazonaws.com",
+     "dns_record_client_routing_policy": null,
+     "drop_invalid_header_fields": false,
+     "enable_cross_zone_load_balancing": true,
+     "enable_deletion_protection": false,
+     "enable_http2": true,
+     "enable_tls_version_and_cipher_suite_headers": false,
+     "enable_waf_fail_open": false,
+     "enable_xff_client_port": false,
+     "enforce_security_group_inbound_rules_on_private_link_traffic": "",
+     "id": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297",
+     "idle_timeout": 60,
+     "internal": false,
+     "ip_address_type": "ipv4",
+     "load_balancer_type": "application",
+     "name": "knowledgebase-test-lb",
+     "name_prefix": "",
+     "preserve_host_header": false,
+     "security_groups": [
+      "sg-0cc4661b5a4e1bc6a"
+     ],
+     "subnet_mapping": [
+      {
+       "allocation_id": "",
+       "ipv6_address": "",
+       "outpost_id": "",
+       "private_ipv4_address": "",
+       "subnet_id": "subnet-03511174557ef01ad"
+      },
+      {
+       "allocation_id": "",
+       "ipv6_address": "",
+       "outpost_id": "",
+       "private_ipv4_address": "",
+       "subnet_id": "subnet-077e6e2807068fdbb"
+      },
+      {
+       "allocation_id": "",
+       "ipv6_address": "",
+       "outpost_id": "",
+       "private_ipv4_address": "",
+       "subnet_id": "subnet-0bd41c517de205bc7"
+      }
+     ],
+     "subnets": [
+      "subnet-03511174557ef01ad",
+      "subnet-077e6e2807068fdbb",
+      "subnet-0bd41c517de205bc7"
+     ],
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null,
+     "vpc_id": "vpc-00b90228bcacafe5a",
+     "xff_header_processing_mode": "append",
+     "zone_id": "Z14GRHDCWA56QT"
+    },
+    "after_sensitive": {
+     "access_logs": [
+      {}
+     ],
+     "connection_logs": [
+      {}
+     ],
+     "security_groups": [
+      false
+     ],
+     "subnet_mapping": [
+      {},
+      {},
+      {}
+     ],
+     "subnets": [
+      false,
+      false,
+      false
+     ],
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "access_logs": [
+      {
+       "bucket": "",
+       "enabled": false,
+       "prefix": ""
+      }
+     ],
+     "arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297",
+     "arn_suffix": "app/knowledgebase-test-lb/15e166681053a297",
+     "client_keep_alive": 3600,
+     "connection_logs": [
+      {
+       "bucket": "",
+       "enabled": false,
+       "prefix": ""
+      }
+     ],
+     "customer_owned_ipv4_pool": "",
+     "desync_mitigation_mode": "defensive",
+     "dns_name": "knowledgebase-test-lb-24604960.ap-northeast-1.elb.amazonaws.com",
+     "dns_record_client_routing_policy": null,
+     "drop_invalid_header_fields": false,
+     "enable_cross_zone_load_balancing": true,
+     "enable_deletion_protection": false,
+     "enable_http2": true,
+     "enable_tls_version_and_cipher_suite_headers": false,
+     "enable_waf_fail_open": false,
+     "enable_xff_client_port": false,
+     "enforce_security_group_inbound_rules_on_private_link_traffic": "",
+     "id": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297",
+     "idle_timeout": 60,
+     "internal": false,
+     "ip_address_type": "ipv4",
+     "load_balancer_type": "application",
+     "name": "knowledgebase-test-lb",
+     "name_prefix": "",
+     "preserve_host_header": false,
+     "security_groups": [
+      "sg-0cc4661b5a4e1bc6a"
+     ],
+     "subnet_mapping": [
+      {
+       "allocation_id": "",
+       "ipv6_address": "",
+       "outpost_id": "",
+       "private_ipv4_address": "",
+       "subnet_id": "subnet-03511174557ef01ad"
+      },
+      {
+       "allocation_id": "",
+       "ipv6_address": "",
+       "outpost_id": "",
+       "private_ipv4_address": "",
+       "subnet_id": "subnet-077e6e2807068fdbb"
+      },
+      {
+       "allocation_id": "",
+       "ipv6_address": "",
+       "outpost_id": "",
+       "private_ipv4_address": "",
+       "subnet_id": "subnet-0bd41c517de205bc7"
+      }
+     ],
+     "subnets": [
+      "subnet-03511174557ef01ad",
+      "subnet-077e6e2807068fdbb",
+      "subnet-0bd41c517de205bc7"
+     ],
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null,
+     "vpc_id": "vpc-00b90228bcacafe5a",
+     "xff_header_processing_mode": "append",
+     "zone_id": "Z14GRHDCWA56QT"
+    },
+    "before_sensitive": {
+     "access_logs": [
+      {}
+     ],
+     "connection_logs": [
+      {}
+     ],
+     "security_groups": [
+      false
+     ],
+     "subnet_mapping": [
+      {},
+      {},
+      {}
+     ],
+     "subnets": [
+      false,
+      false,
+      false
+     ],
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "name": "knowledgebase-test-lb",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_alb"
+  },
+  {
+   "address": "aws_default_subnet.default_subnet_a",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:ec2:ap-northeast-1:767398123553:subnet/subnet-077e6e2807068fdbb",
+     "assign_ipv6_address_on_creation": false,
+     "availability_zone": "ap-northeast-1a",
+     "availability_zone_id": "apne1-az4",
+     "cidr_block": "172.31.32.0/20",
+     "customer_owned_ipv4_pool": "",
+     "enable_dns64": false,
+     "enable_lni_at_device_index": 0,
+     "enable_resource_name_dns_a_record_on_launch": false,
+     "enable_resource_name_dns_aaaa_record_on_launch": false,
+     "existing_default_subnet": true,
+     "force_destroy": false,
+     "id": "subnet-077e6e2807068fdbb",
+     "ipv6_cidr_block": "",
+     "ipv6_cidr_block_association_id": "",
+     "ipv6_native": false,
+     "map_customer_owned_ip_on_launch": false,
+     "map_public_ip_on_launch": true,
+     "outpost_arn": "",
+     "owner_id": "767398123553",
+     "private_dns_hostname_type_on_launch": "ip-name",
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null,
+     "vpc_id": "vpc-00b90228bcacafe5a"
+    },
+    "after_sensitive": {
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:ec2:ap-northeast-1:767398123553:subnet/subnet-077e6e2807068fdbb",
+     "assign_ipv6_address_on_creation": false,
+     "availability_zone": "ap-northeast-1a",
+     "availability_zone_id": "apne1-az4",
+     "cidr_block": "172.31.32.0/20",
+     "customer_owned_ipv4_pool": "",
+     "enable_dns64": false,
+     "enable_lni_at_device_index": 0,
+     "enable_resource_name_dns_a_record_on_launch": false,
+     "enable_resource_name_dns_aaaa_record_on_launch": false,
+     "existing_default_subnet": true,
+     "force_destroy": false,
+     "id": "subnet-077e6e2807068fdbb",
+     "ipv6_cidr_block": "",
+     "ipv6_cidr_block_association_id": "",
+     "ipv6_native": false,
+     "map_customer_owned_ip_on_launch": false,
+     "map_public_ip_on_launch": true,
+     "outpost_arn": "",
+     "owner_id": "767398123553",
+     "private_dns_hostname_type_on_launch": "ip-name",
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null,
+     "vpc_id": "vpc-00b90228bcacafe5a"
+    },
+    "before_sensitive": {
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "name": "default_subnet_a",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_default_subnet"
+  },
+  {
+   "address": "aws_default_subnet.default_subnet_c",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:ec2:ap-northeast-1:767398123553:subnet/subnet-0bd41c517de205bc7",
+     "assign_ipv6_address_on_creation": false,
+     "availability_zone": "ap-northeast-1c",
+     "availability_zone_id": "apne1-az1",
+     "cidr_block": "172.31.0.0/20",
+     "customer_owned_ipv4_pool": "",
+     "enable_dns64": false,
+     "enable_lni_at_device_index": 0,
+     "enable_resource_name_dns_a_record_on_launch": false,
+     "enable_resource_name_dns_aaaa_record_on_launch": false,
+     "existing_default_subnet": true,
+     "force_destroy": false,
+     "id": "subnet-0bd41c517de205bc7",
+     "ipv6_cidr_block": "",
+     "ipv6_cidr_block_association_id": "",
+     "ipv6_native": false,
+     "map_customer_owned_ip_on_launch": false,
+     "map_public_ip_on_launch": true,
+     "outpost_arn": "",
+     "owner_id": "767398123553",
+     "private_dns_hostname_type_on_launch": "ip-name",
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null,
+     "vpc_id": "vpc-00b90228bcacafe5a"
+    },
+    "after_sensitive": {
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:ec2:ap-northeast-1:767398123553:subnet/subnet-0bd41c517de205bc7",
+     "assign_ipv6_address_on_creation": false,
+     "availability_zone": "ap-northeast-1c",
+     "availability_zone_id": "apne1-az1",
+     "cidr_block": "172.31.0.0/20",
+     "customer_owned_ipv4_pool": "",
+     "enable_dns64": false,
+     "enable_lni_at_device_index": 0,
+     "enable_resource_name_dns_a_record_on_launch": false,
+     "enable_resource_name_dns_aaaa_record_on_launch": false,
+     "existing_default_subnet": true,
+     "force_destroy": false,
+     "id": "subnet-0bd41c517de205bc7",
+     "ipv6_cidr_block": "",
+     "ipv6_cidr_block_association_id": "",
+     "ipv6_native": false,
+     "map_customer_owned_ip_on_launch": false,
+     "map_public_ip_on_launch": true,
+     "outpost_arn": "",
+     "owner_id": "767398123553",
+     "private_dns_hostname_type_on_launch": "ip-name",
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null,
+     "vpc_id": "vpc-00b90228bcacafe5a"
+    },
+    "before_sensitive": {
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "name": "default_subnet_c",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_default_subnet"
+  },
+  {
+   "address": "aws_default_subnet.default_subnet_d",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:ec2:ap-northeast-1:767398123553:subnet/subnet-03511174557ef01ad",
+     "assign_ipv6_address_on_creation": false,
+     "availability_zone": "ap-northeast-1d",
+     "availability_zone_id": "apne1-az2",
+     "cidr_block": "172.31.16.0/20",
+     "customer_owned_ipv4_pool": "",
+     "enable_dns64": false,
+     "enable_lni_at_device_index": 0,
+     "enable_resource_name_dns_a_record_on_launch": false,
+     "enable_resource_name_dns_aaaa_record_on_launch": false,
+     "existing_default_subnet": true,
+     "force_destroy": false,
+     "id": "subnet-03511174557ef01ad",
+     "ipv6_cidr_block": "",
+     "ipv6_cidr_block_association_id": "",
+     "ipv6_native": false,
+     "map_customer_owned_ip_on_launch": false,
+     "map_public_ip_on_launch": true,
+     "outpost_arn": "",
+     "owner_id": "767398123553",
+     "private_dns_hostname_type_on_launch": "ip-name",
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null,
+     "vpc_id": "vpc-00b90228bcacafe5a"
+    },
+    "after_sensitive": {
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:ec2:ap-northeast-1:767398123553:subnet/subnet-03511174557ef01ad",
+     "assign_ipv6_address_on_creation": false,
+     "availability_zone": "ap-northeast-1d",
+     "availability_zone_id": "apne1-az2",
+     "cidr_block": "172.31.16.0/20",
+     "customer_owned_ipv4_pool": "",
+     "enable_dns64": false,
+     "enable_lni_at_device_index": 0,
+     "enable_resource_name_dns_a_record_on_launch": false,
+     "enable_resource_name_dns_aaaa_record_on_launch": false,
+     "existing_default_subnet": true,
+     "force_destroy": false,
+     "id": "subnet-03511174557ef01ad",
+     "ipv6_cidr_block": "",
+     "ipv6_cidr_block_association_id": "",
+     "ipv6_native": false,
+     "map_customer_owned_ip_on_launch": false,
+     "map_public_ip_on_launch": true,
+     "outpost_arn": "",
+     "owner_id": "767398123553",
+     "private_dns_hostname_type_on_launch": "ip-name",
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null,
+     "vpc_id": "vpc-00b90228bcacafe5a"
+    },
+    "before_sensitive": {
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "name": "default_subnet_d",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_default_subnet"
+  },
+  {
+   "address": "aws_default_vpc.default_vpc",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:ec2:ap-northeast-1:767398123553:vpc/vpc-00b90228bcacafe5a",
+     "assign_generated_ipv6_cidr_block": false,
+     "cidr_block": "172.31.0.0/16",
+     "default_network_acl_id": "acl-0768eee27070f0817",
+     "default_route_table_id": "rtb-06d0a7a5041a59787",
+     "default_security_group_id": "sg-0864bbdfef129cb53",
+     "dhcp_options_id": "dopt-073165e62c1aab7a5",
+     "enable_dns_hostnames": true,
+     "enable_dns_support": true,
+     "enable_network_address_usage_metrics": false,
+     "existing_default_vpc": true,
+     "force_destroy": false,
+     "id": "vpc-00b90228bcacafe5a",
+     "instance_tenancy": "default",
+     "ipv6_association_id": "",
+     "ipv6_cidr_block": "",
+     "ipv6_cidr_block_network_border_group": "",
+     "ipv6_ipam_pool_id": "",
+     "ipv6_netmask_length": 0,
+     "main_route_table_id": "rtb-06d0a7a5041a59787",
+     "owner_id": "767398123553",
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_sensitive": {
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:ec2:ap-northeast-1:767398123553:vpc/vpc-00b90228bcacafe5a",
+     "assign_generated_ipv6_cidr_block": false,
+     "cidr_block": "172.31.0.0/16",
+     "default_network_acl_id": "acl-0768eee27070f0817",
+     "default_route_table_id": "rtb-06d0a7a5041a59787",
+     "default_security_group_id": "sg-0864bbdfef129cb53",
+     "dhcp_options_id": "dopt-073165e62c1aab7a5",
+     "enable_dns_hostnames": true,
+     "enable_dns_support": true,
+     "enable_network_address_usage_metrics": false,
+     "existing_default_vpc": true,
+     "force_destroy": false,
+     "id": "vpc-00b90228bcacafe5a",
+     "instance_tenancy": "default",
+     "ipv6_association_id": "",
+     "ipv6_cidr_block": "",
+     "ipv6_cidr_block_network_border_group": "",
+     "ipv6_ipam_pool_id": "",
+     "ipv6_netmask_length": 0,
+     "main_route_table_id": "rtb-06d0a7a5041a59787",
+     "owner_id": "767398123553",
+     "tags": {},
+     "tags_all": {}
+    },
+    "before_sensitive": {
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "name": "default_vpc",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_default_vpc"
+  },
+  {
+   "address": "aws_ecr_repository.knowledgebase-test-ecr-repo",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:ecr:ap-northeast-1:767398123553:repository/knowledgebase-test-ecr-repo",
+     "encryption_configuration": [
+      {
+       "encryption_type": "AES256",
+       "kms_key": ""
+      }
+     ],
+     "force_delete": true,
+     "id": "knowledgebase-test-ecr-repo",
+     "image_scanning_configuration": [
+      {
+       "scan_on_push": true
+      }
+     ],
+     "image_tag_mutability": "MUTABLE",
+     "name": "knowledgebase-test-ecr-repo",
+     "registry_id": "767398123553",
+     "repository_url": "767398123553.dkr.ecr.ap-northeast-1.amazonaws.com/knowledgebase-test-ecr-repo",
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null
+    },
+    "after_sensitive": {
+     "encryption_configuration": [
+      {}
+     ],
+     "image_scanning_configuration": [
+      {}
+     ],
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:ecr:ap-northeast-1:767398123553:repository/knowledgebase-test-ecr-repo",
+     "encryption_configuration": [
+      {
+       "encryption_type": "AES256",
+       "kms_key": ""
+      }
+     ],
+     "force_delete": true,
+     "id": "knowledgebase-test-ecr-repo",
+     "image_scanning_configuration": [
+      {
+       "scan_on_push": true
+      }
+     ],
+     "image_tag_mutability": "MUTABLE",
+     "name": "knowledgebase-test-ecr-repo",
+     "registry_id": "767398123553",
+     "repository_url": "767398123553.dkr.ecr.ap-northeast-1.amazonaws.com/knowledgebase-test-ecr-repo",
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null
+    },
+    "before_sensitive": {
+     "encryption_configuration": [
+      {}
+     ],
+     "image_scanning_configuration": [
+      {}
+     ],
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "name": "knowledgebase-test-ecr-repo",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_ecr_repository"
+  },
+  {
+   "address": "aws_ecs_cluster.knowledgebase-test-cluster",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:ecs:ap-northeast-1:767398123553:cluster/knowledgebase-test-cluster",
+     "configuration": [],
+     "id": "arn:aws:ecs:ap-northeast-1:767398123553:cluster/knowledgebase-test-cluster",
+     "name": "knowledgebase-test-cluster",
+     "service_connect_defaults": [],
+     "setting": [
+      {
+       "name": "containerInsights",
+       "value": "disabled"
+      }
+     ],
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_sensitive": {
+     "configuration": [],
+     "service_connect_defaults": [],
+     "setting": [
+      {}
+     ],
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:ecs:ap-northeast-1:767398123553:cluster/knowledgebase-test-cluster",
+     "configuration": [],
+     "id": "arn:aws:ecs:ap-northeast-1:767398123553:cluster/knowledgebase-test-cluster",
+     "name": "knowledgebase-test-cluster",
+     "service_connect_defaults": [],
+     "setting": [
+      {
+       "name": "containerInsights",
+       "value": "disabled"
+      }
+     ],
+     "tags": {},
+     "tags_all": {}
+    },
+    "before_sensitive": {
+     "configuration": [],
+     "service_connect_defaults": [],
+     "setting": [
+      {}
+     ],
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "name": "knowledgebase-test-cluster",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_ecs_cluster"
+  },
+  {
+   "address": "aws_ecs_service.knowledgebase-test-service",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "alarms": [],
+     "capacity_provider_strategy": [],
+     "cluster": "arn:aws:ecs:ap-northeast-1:767398123553:cluster/knowledgebase-test-cluster",
+     "deployment_circuit_breaker": [
+      {
+       "enable": false,
+       "rollback": false
+      }
+     ],
+     "deployment_controller": [
+      {
+       "type": "ECS"
+      }
+     ],
+     "deployment_maximum_percent": 200,
+     "deployment_minimum_healthy_percent": 100,
+     "desired_count": 3,
+     "enable_ecs_managed_tags": false,
+     "enable_execute_command": false,
+     "force_new_deployment": null,
+     "health_check_grace_period_seconds": 0,
+     "iam_role": "/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+     "id": "arn:aws:ecs:ap-northeast-1:767398123553:service/knowledgebase-test-cluster/knowledgebase-test-service",
+     "launch_type": "FARGATE",
+     "load_balancer": [
+      {
+       "container_name": "knowledgebase-test-container",
+       "container_port": 3000,
+       "elb_name": "",
+       "target_group_arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215"
+      }
+     ],
+     "name": "knowledgebase-test-service",
+     "network_configuration": [
+      {
+       "assign_public_ip": true,
+       "security_groups": [
+        "sg-08fe9627476cdad8b"
+       ],
+       "subnets": [
+        "subnet-03511174557ef01ad",
+        "subnet-077e6e2807068fdbb",
+        "subnet-0bd41c517de205bc7"
+       ]
+      }
+     ],
+     "ordered_placement_strategy": [],
+     "placement_constraints": [],
+     "platform_version": "LATEST",
+     "propagate_tags": "NONE",
+     "scheduling_strategy": "REPLICA",
+     "service_connect_configuration": [],
+     "service_registries": [],
+     "tags": {},
+     "tags_all": {},
+     "task_definition": "arn:aws:ecs:ap-northeast-1:767398123553:task-definition/knowledgebase-test-task-test:2",
+     "timeouts": null,
+     "triggers": {},
+     "volume_configuration": [],
+     "wait_for_steady_state": false
+    },
+    "after_sensitive": {
+     "alarms": [],
+     "capacity_provider_strategy": [],
+     "deployment_circuit_breaker": [
+      {}
+     ],
+     "deployment_controller": [
+      {}
+     ],
+     "load_balancer": [
+      {}
+     ],
+     "network_configuration": [
+      {
+       "security_groups": [
+        false
+       ],
+       "subnets": [
+        false,
+        false,
+        false
+       ]
+      }
+     ],
+     "ordered_placement_strategy": [],
+     "placement_constraints": [],
+     "service_connect_configuration": [],
+     "service_registries": [],
+     "tags": {},
+     "tags_all": {},
+     "triggers": {},
+     "volume_configuration": []
+    },
+    "after_unknown": {},
+    "before": {
+     "alarms": [],
+     "capacity_provider_strategy": [],
+     "cluster": "arn:aws:ecs:ap-northeast-1:767398123553:cluster/knowledgebase-test-cluster",
+     "deployment_circuit_breaker": [
+      {
+       "enable": false,
+       "rollback": false
+      }
+     ],
+     "deployment_controller": [
+      {
+       "type": "ECS"
+      }
+     ],
+     "deployment_maximum_percent": 200,
+     "deployment_minimum_healthy_percent": 100,
+     "desired_count": 3,
+     "enable_ecs_managed_tags": false,
+     "enable_execute_command": false,
+     "force_new_deployment": null,
+     "health_check_grace_period_seconds": 0,
+     "iam_role": "/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+     "id": "arn:aws:ecs:ap-northeast-1:767398123553:service/knowledgebase-test-cluster/knowledgebase-test-service",
+     "launch_type": "FARGATE",
+     "load_balancer": [
+      {
+       "container_name": "knowledgebase-test-container",
+       "container_port": 3000,
+       "elb_name": "",
+       "target_group_arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215"
+      }
+     ],
+     "name": "knowledgebase-test-service",
+     "network_configuration": [
+      {
+       "assign_public_ip": true,
+       "security_groups": [
+        "sg-08fe9627476cdad8b"
+       ],
+       "subnets": [
+        "subnet-03511174557ef01ad",
+        "subnet-077e6e2807068fdbb",
+        "subnet-0bd41c517de205bc7"
+       ]
+      }
+     ],
+     "ordered_placement_strategy": [],
+     "placement_constraints": [],
+     "platform_version": "LATEST",
+     "propagate_tags": "NONE",
+     "scheduling_strategy": "REPLICA",
+     "service_connect_configuration": [],
+     "service_registries": [],
+     "tags": {},
+     "tags_all": {},
+     "task_definition": "arn:aws:ecs:ap-northeast-1:767398123553:task-definition/knowledgebase-test-task-test:2",
+     "timeouts": null,
+     "triggers": {},
+     "volume_configuration": [],
+     "wait_for_steady_state": false
+    },
+    "before_sensitive": {
+     "alarms": [],
+     "capacity_provider_strategy": [],
+     "deployment_circuit_breaker": [
+      {}
+     ],
+     "deployment_controller": [
+      {}
+     ],
+     "load_balancer": [
+      {}
+     ],
+     "network_configuration": [
+      {
+       "security_groups": [
+        false
+       ],
+       "subnets": [
+        false,
+        false,
+        false
+       ]
+      }
+     ],
+     "ordered_placement_strategy": [],
+     "placement_constraints": [],
+     "service_connect_configuration": [],
+     "service_registries": [],
+     "tags": {},
+     "tags_all": {},
+     "triggers": {},
+     "volume_configuration": []
+    }
+   },
+   "mode": "managed",
+   "name": "knowledgebase-test-service",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_ecs_service"
+  },
+  {
+   "address": "aws_ecs_task_definition.knowledgebase-test-task-test",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:ecs:ap-northeast-1:767398123553:task-definition/knowledgebase-test-task-test:2",
+     "arn_without_revision": "arn:aws:ecs:ap-northeast-1:767398123553:task-definition/knowledgebase-test-task-test",
+     "container_definitions": "[{\"Command\":null,\"Cpu\":256,\"CredentialSpecs\":null,\"DependsOn\":null,\"DisableNetworking\":null,\"DnsSearchDomains\":null,\"DnsServers\":null,\"DockerLabels\":null,\"DockerSecurityOptions\":null,\"EntryPoint\":null,\"Environment\":[],\"EnvironmentFiles\":null,\"Essential\":true,\"ExtraHosts\":null,\"FirelensConfiguration\":null,\"HealthCheck\":null,\"Hostname\":null,\"Image\":\"767398123553.dkr.ecr.ap-northeast-1.amazonaws.com/knowledgebase-test-ecr-repo\",\"Interactive\":null,\"Links\":null,\"LinuxParameters\":null,\"LogConfiguration\":null,\"Memory\":512,\"MemoryReservation\":null,\"MountPoints\":[],\"Name\":\"knowledgebase-test-container\",\"PortMappings\":[{\"AppProtocol\":\"\",\"ContainerPort\":3000,\"ContainerPortRange\":null,\"HostPort\":3000,\"Name\":null,\"Protocol\":\"tcp\"}],\"Privileged\":null,\"PseudoTerminal\":null,\"ReadonlyRootFilesystem\":null,\"RepositoryCredentials\":null,\"ResourceRequirements\":null,\"Secrets\":null,\"StartTimeout\":null,\"StopTimeout\":null,\"SystemControls\":[],\"Ulimits\":null,\"User\":null,\"VolumesFrom\":[],\"WorkingDirectory\":null}]\n",
+     "cpu": "256",
+     "ephemeral_storage": [],
+     "execution_role_arn": "arn:aws:iam::767398123553:role/ecsTaskExecutionRole",
+     "family": "knowledgebase-test-task-test",
+     "id": "knowledgebase-test-task-test",
+     "inference_accelerator": [],
+     "ipc_mode": "",
+     "memory": "512",
+     "network_mode": "awsvpc",
+     "pid_mode": "",
+     "placement_constraints": [],
+     "proxy_configuration": [],
+     "requires_compatibilities": [
+      "FARGATE"
+     ],
+     "revision": 2,
+     "runtime_platform": [],
+     "skip_destroy": false,
+     "tags": {},
+     "tags_all": {},
+     "task_role_arn": "",
+     "track_latest": false,
+     "volume": []
+    },
+    "after_sensitive": {
+     "ephemeral_storage": [],
+     "inference_accelerator": [],
+     "placement_constraints": [],
+     "proxy_configuration": [],
+     "requires_compatibilities": [
+      false
+     ],
+     "runtime_platform": [],
+     "tags": {},
+     "tags_all": {},
+     "volume": []
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:ecs:ap-northeast-1:767398123553:task-definition/knowledgebase-test-task-test:2",
+     "arn_without_revision": "arn:aws:ecs:ap-northeast-1:767398123553:task-definition/knowledgebase-test-task-test",
+     "container_definitions": "[{\"Command\":null,\"Cpu\":256,\"CredentialSpecs\":null,\"DependsOn\":null,\"DisableNetworking\":null,\"DnsSearchDomains\":null,\"DnsServers\":null,\"DockerLabels\":null,\"DockerSecurityOptions\":null,\"EntryPoint\":null,\"Environment\":[],\"EnvironmentFiles\":null,\"Essential\":true,\"ExtraHosts\":null,\"FirelensConfiguration\":null,\"HealthCheck\":null,\"Hostname\":null,\"Image\":\"767398123553.dkr.ecr.ap-northeast-1.amazonaws.com/knowledgebase-test-ecr-repo\",\"Interactive\":null,\"Links\":null,\"LinuxParameters\":null,\"LogConfiguration\":null,\"Memory\":512,\"MemoryReservation\":null,\"MountPoints\":[],\"Name\":\"knowledgebase-test-container\",\"PortMappings\":[{\"AppProtocol\":\"\",\"ContainerPort\":3000,\"ContainerPortRange\":null,\"HostPort\":3000,\"Name\":null,\"Protocol\":\"tcp\"}],\"Privileged\":null,\"PseudoTerminal\":null,\"ReadonlyRootFilesystem\":null,\"RepositoryCredentials\":null,\"ResourceRequirements\":null,\"Secrets\":null,\"StartTimeout\":null,\"StopTimeout\":null,\"SystemControls\":[],\"Ulimits\":null,\"User\":null,\"VolumesFrom\":[],\"WorkingDirectory\":null}]\n",
+     "cpu": "256",
+     "ephemeral_storage": [],
+     "execution_role_arn": "arn:aws:iam::767398123553:role/ecsTaskExecutionRole",
+     "family": "knowledgebase-test-task-test",
+     "id": "knowledgebase-test-task-test",
+     "inference_accelerator": [],
+     "ipc_mode": "",
+     "memory": "512",
+     "network_mode": "awsvpc",
+     "pid_mode": "",
+     "placement_constraints": [],
+     "proxy_configuration": [],
+     "requires_compatibilities": [
+      "FARGATE"
+     ],
+     "revision": 2,
+     "runtime_platform": [],
+     "skip_destroy": false,
+     "tags": {},
+     "tags_all": {},
+     "task_role_arn": "",
+     "track_latest": false,
+     "volume": []
+    },
+    "before_sensitive": {
+     "ephemeral_storage": [],
+     "inference_accelerator": [],
+     "placement_constraints": [],
+     "proxy_configuration": [],
+     "requires_compatibilities": [
+      false
+     ],
+     "runtime_platform": [],
+     "tags": {},
+     "tags_all": {},
+     "volume": []
+    }
+   },
+   "mode": "managed",
+   "name": "knowledgebase-test-task-test",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_ecs_task_definition"
+  },
+  {
+   "address": "aws_iam_role.ecsTaskExecutionRole",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:iam::767398123553:role/ecsTaskExecutionRole",
+     "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ecs-tasks.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+     "create_date": "2024-07-30T05:45:12Z",
+     "description": "",
+     "force_detach_policies": false,
+     "id": "ecsTaskExecutionRole",
+     "inline_policy": [],
+     "managed_policy_arns": [
+      "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+     ],
+     "max_session_duration": 3600,
+     "name": "ecsTaskExecutionRole",
+     "name_prefix": "",
+     "path": "/",
+     "permissions_boundary": "",
+     "tags": {},
+     "tags_all": {},
+     "unique_id": "AROA3FLD6DAQ5GUH6X3H5"
+    },
+    "after_sensitive": {
+     "inline_policy": [],
+     "managed_policy_arns": [
+      false
+     ],
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:iam::767398123553:role/ecsTaskExecutionRole",
+     "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ecs-tasks.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+     "create_date": "2024-07-30T05:45:12Z",
+     "description": "",
+     "force_detach_policies": false,
+     "id": "ecsTaskExecutionRole",
+     "inline_policy": [],
+     "managed_policy_arns": [
+      "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+     ],
+     "max_session_duration": 3600,
+     "name": "ecsTaskExecutionRole",
+     "name_prefix": "",
+     "path": "/",
+     "permissions_boundary": "",
+     "tags": {},
+     "tags_all": {},
+     "unique_id": "AROA3FLD6DAQ5GUH6X3H5"
+    },
+    "before_sensitive": {
+     "inline_policy": [],
+     "managed_policy_arns": [
+      false
+     ],
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "name": "ecsTaskExecutionRole",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_iam_role"
+  },
+  {
+   "address": "aws_iam_role_policy_attachment.ecsTaskExecutionRole_policy",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "id": "ecsTaskExecutionRole-20240730054510496200000002",
+     "policy_arn": "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
+     "role": "ecsTaskExecutionRole"
+    },
+    "after_sensitive": {},
+    "after_unknown": {},
+    "before": {
+     "id": "ecsTaskExecutionRole-20240730054510496200000002",
+     "policy_arn": "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
+     "role": "ecsTaskExecutionRole"
+    },
+    "before_sensitive": {}
+   },
+   "mode": "managed",
+   "name": "ecsTaskExecutionRole_policy",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_iam_role_policy_attachment"
+  },
+  {
+   "address": "aws_lb_listener.knowledgebase-test-listener",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "alpn_policy": null,
+     "arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:listener/app/knowledgebase-test-lb/15e166681053a297/60d0cea49229eb4f",
+     "certificate_arn": null,
+     "default_action": [
+      {
+       "authenticate_cognito": [],
+       "authenticate_oidc": [],
+       "fixed_response": [],
+       "forward": [],
+       "order": 1,
+       "redirect": [],
+       "target_group_arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215",
+       "type": "forward"
+      }
+     ],
+     "id": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:listener/app/knowledgebase-test-lb/15e166681053a297/60d0cea49229eb4f",
+     "load_balancer_arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297",
+     "mutual_authentication": [],
+     "port": 80,
+     "protocol": "HTTP",
+     "ssl_policy": "",
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null
+    },
+    "after_sensitive": {
+     "default_action": [
+      {
+       "authenticate_cognito": [],
+       "authenticate_oidc": [],
+       "fixed_response": [],
+       "forward": [],
+       "redirect": []
+      }
+     ],
+     "mutual_authentication": [],
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "alpn_policy": null,
+     "arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:listener/app/knowledgebase-test-lb/15e166681053a297/60d0cea49229eb4f",
+     "certificate_arn": null,
+     "default_action": [
+      {
+       "authenticate_cognito": [],
+       "authenticate_oidc": [],
+       "fixed_response": [],
+       "forward": [],
+       "order": 1,
+       "redirect": [],
+       "target_group_arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215",
+       "type": "forward"
+      }
+     ],
+     "id": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:listener/app/knowledgebase-test-lb/15e166681053a297/60d0cea49229eb4f",
+     "load_balancer_arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297",
+     "mutual_authentication": [],
+     "port": 80,
+     "protocol": "HTTP",
+     "ssl_policy": "",
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null
+    },
+    "before_sensitive": {
+     "default_action": [
+      {
+       "authenticate_cognito": [],
+       "authenticate_oidc": [],
+       "fixed_response": [],
+       "forward": [],
+       "redirect": []
+      }
+     ],
+     "mutual_authentication": [],
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "name": "knowledgebase-test-listener",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_lb_listener"
+  },
+  {
+   "address": "aws_lb_target_group.knowledgebase-test-target_group",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215",
+     "arn_suffix": "targetgroup/target-group/cce3f43127ebf215",
+     "connection_termination": null,
+     "deregistration_delay": "300",
+     "health_check": [
+      {
+       "enabled": true,
+       "healthy_threshold": 3,
+       "interval": 30,
+       "matcher": "200,301,302",
+       "path": "/",
+       "port": "traffic-port",
+       "protocol": "HTTP",
+       "timeout": 5,
+       "unhealthy_threshold": 3
+      }
+     ],
+     "id": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215",
+     "ip_address_type": "ipv4",
+     "lambda_multi_value_headers_enabled": false,
+     "load_balancer_arns": [
+      "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297"
+     ],
+     "load_balancing_algorithm_type": "round_robin",
+     "load_balancing_anomaly_mitigation": "off",
+     "load_balancing_cross_zone_enabled": "use_load_balancer_configuration",
+     "name": "target-group",
+     "name_prefix": "",
+     "port": 80,
+     "preserve_client_ip": null,
+     "protocol": "HTTP",
+     "protocol_version": "HTTP1",
+     "proxy_protocol_v2": false,
+     "slow_start": 0,
+     "stickiness": [
+      {
+       "cookie_duration": 86400,
+       "cookie_name": "",
+       "enabled": false,
+       "type": "lb_cookie"
+      }
+     ],
+     "tags": {},
+     "tags_all": {},
+     "target_failover": [
+      {
+       "on_deregistration": null,
+       "on_unhealthy": null
+      }
+     ],
+     "target_group_health": [
+      {
+       "dns_failover": [
+        {
+         "minimum_healthy_targets_count": "1",
+         "minimum_healthy_targets_percentage": "off"
+        }
+       ],
+       "unhealthy_state_routing": [
+        {
+         "minimum_healthy_targets_count": 1,
+         "minimum_healthy_targets_percentage": "off"
+        }
+       ]
+      }
+     ],
+     "target_health_state": [
+      {
+       "enable_unhealthy_connection_termination": null
+      }
+     ],
+     "target_type": "ip",
+     "vpc_id": "vpc-00b90228bcacafe5a"
+    },
+    "after_sensitive": {
+     "health_check": [
+      {}
+     ],
+     "load_balancer_arns": [
+      false
+     ],
+     "stickiness": [
+      {}
+     ],
+     "tags": {},
+     "tags_all": {},
+     "target_failover": [
+      {}
+     ],
+     "target_group_health": [
+      {
+       "dns_failover": [
+        {}
+       ],
+       "unhealthy_state_routing": [
+        {}
+       ]
+      }
+     ],
+     "target_health_state": [
+      {}
+     ]
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215",
+     "arn_suffix": "targetgroup/target-group/cce3f43127ebf215",
+     "connection_termination": null,
+     "deregistration_delay": "300",
+     "health_check": [
+      {
+       "enabled": true,
+       "healthy_threshold": 3,
+       "interval": 30,
+       "matcher": "200,301,302",
+       "path": "/",
+       "port": "traffic-port",
+       "protocol": "HTTP",
+       "timeout": 5,
+       "unhealthy_threshold": 3
+      }
+     ],
+     "id": "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:targetgroup/target-group/cce3f43127ebf215",
+     "ip_address_type": "ipv4",
+     "lambda_multi_value_headers_enabled": false,
+     "load_balancer_arns": [
+      "arn:aws:elasticloadbalancing:ap-northeast-1:767398123553:loadbalancer/app/knowledgebase-test-lb/15e166681053a297"
+     ],
+     "load_balancing_algorithm_type": "round_robin",
+     "load_balancing_anomaly_mitigation": "off",
+     "load_balancing_cross_zone_enabled": "use_load_balancer_configuration",
+     "name": "target-group",
+     "name_prefix": "",
+     "port": 80,
+     "preserve_client_ip": null,
+     "protocol": "HTTP",
+     "protocol_version": "HTTP1",
+     "proxy_protocol_v2": false,
+     "slow_start": 0,
+     "stickiness": [
+      {
+       "cookie_duration": 86400,
+       "cookie_name": "",
+       "enabled": false,
+       "type": "lb_cookie"
+      }
+     ],
+     "tags": {},
+     "tags_all": {},
+     "target_failover": [
+      {
+       "on_deregistration": null,
+       "on_unhealthy": null
+      }
+     ],
+     "target_group_health": [
+      {
+       "dns_failover": [
+        {
+         "minimum_healthy_targets_count": "1",
+         "minimum_healthy_targets_percentage": "off"
+        }
+       ],
+       "unhealthy_state_routing": [
+        {
+         "minimum_healthy_targets_count": 1,
+         "minimum_healthy_targets_percentage": "off"
+        }
+       ]
+      }
+     ],
+     "target_health_state": [
+      {
+       "enable_unhealthy_connection_termination": null
+      }
+     ],
+     "target_type": "ip",
+     "vpc_id": "vpc-00b90228bcacafe5a"
+    },
+    "before_sensitive": {
+     "health_check": [
+      {}
+     ],
+     "load_balancer_arns": [
+      false
+     ],
+     "stickiness": [
+      {}
+     ],
+     "tags": {},
+     "tags_all": {},
+     "target_failover": [
+      {}
+     ],
+     "target_group_health": [
+      {
+       "dns_failover": [
+        {}
+       ],
+       "unhealthy_state_routing": [
+        {}
+       ]
+      }
+     ],
+     "target_health_state": [
+      {}
+     ]
+    }
+   },
+   "mode": "managed",
+   "name": "knowledgebase-test-target_group",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_lb_target_group"
+  },
+  {
+   "address": "aws_security_group.knowledgebase-test-lb_security_group",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:ec2:ap-northeast-1:767398123553:security-group/sg-0cc4661b5a4e1bc6a",
+     "description": "Managed by Terraform",
+     "egress": [
+      {
+       "cidr_blocks": [
+        "0.0.0.0/0"
+       ],
+       "description": "",
+       "from_port": 0,
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "protocol": "-1",
+       "security_groups": [],
+       "self": false,
+       "to_port": 0
+      }
+     ],
+     "id": "sg-0cc4661b5a4e1bc6a",
+     "ingress": [
+      {
+       "cidr_blocks": [
+        "0.0.0.0/0"
+       ],
+       "description": "",
+       "from_port": 80,
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "protocol": "tcp",
+       "security_groups": [],
+       "self": false,
+       "to_port": 80
+      }
+     ],
+     "name": "terraform-20240730054508261100000001",
+     "name_prefix": "terraform-",
+     "owner_id": "767398123553",
+     "revoke_rules_on_delete": false,
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null,
+     "vpc_id": "vpc-00b90228bcacafe5a"
+    },
+    "after_sensitive": {
+     "egress": [
+      {
+       "cidr_blocks": [
+        false
+       ],
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "security_groups": []
+      }
+     ],
+     "ingress": [
+      {
+       "cidr_blocks": [
+        false
+       ],
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "security_groups": []
+      }
+     ],
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:ec2:ap-northeast-1:767398123553:security-group/sg-0cc4661b5a4e1bc6a",
+     "description": "Managed by Terraform",
+     "egress": [
+      {
+       "cidr_blocks": [
+        "0.0.0.0/0"
+       ],
+       "description": "",
+       "from_port": 0,
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "protocol": "-1",
+       "security_groups": [],
+       "self": false,
+       "to_port": 0
+      }
+     ],
+     "id": "sg-0cc4661b5a4e1bc6a",
+     "ingress": [
+      {
+       "cidr_blocks": [
+        "0.0.0.0/0"
+       ],
+       "description": "",
+       "from_port": 80,
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "protocol": "tcp",
+       "security_groups": [],
+       "self": false,
+       "to_port": 80
+      }
+     ],
+     "name": "terraform-20240730054508261100000001",
+     "name_prefix": "terraform-",
+     "owner_id": "767398123553",
+     "revoke_rules_on_delete": false,
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null,
+     "vpc_id": "vpc-00b90228bcacafe5a"
+    },
+    "before_sensitive": {
+     "egress": [
+      {
+       "cidr_blocks": [
+        false
+       ],
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "security_groups": []
+      }
+     ],
+     "ingress": [
+      {
+       "cidr_blocks": [
+        false
+       ],
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "security_groups": []
+      }
+     ],
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "name": "knowledgebase-test-lb_security_group",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_security_group"
+  },
+  {
+   "address": "aws_security_group.knowledgebase-test-service_security_group",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:ec2:ap-northeast-1:767398123553:security-group/sg-08fe9627476cdad8b",
+     "description": "Managed by Terraform",
+     "egress": [
+      {
+       "cidr_blocks": [
+        "0.0.0.0/0"
+       ],
+       "description": "",
+       "from_port": 0,
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "protocol": "-1",
+       "security_groups": [],
+       "self": false,
+       "to_port": 0
+      }
+     ],
+     "id": "sg-08fe9627476cdad8b",
+     "ingress": [
+      {
+       "cidr_blocks": [],
+       "description": "",
+       "from_port": 0,
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "protocol": "-1",
+       "security_groups": [
+        "sg-0cc4661b5a4e1bc6a"
+       ],
+       "self": false,
+       "to_port": 0
+      }
+     ],
+     "name": "terraform-20240730054510625400000003",
+     "name_prefix": "terraform-",
+     "owner_id": "767398123553",
+     "revoke_rules_on_delete": false,
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null,
+     "vpc_id": "vpc-00b90228bcacafe5a"
+    },
+    "after_sensitive": {
+     "egress": [
+      {
+       "cidr_blocks": [
+        false
+       ],
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "security_groups": []
+      }
+     ],
+     "ingress": [
+      {
+       "cidr_blocks": [],
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "security_groups": [
+        false
+       ]
+      }
+     ],
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:ec2:ap-northeast-1:767398123553:security-group/sg-08fe9627476cdad8b",
+     "description": "Managed by Terraform",
+     "egress": [
+      {
+       "cidr_blocks": [
+        "0.0.0.0/0"
+       ],
+       "description": "",
+       "from_port": 0,
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "protocol": "-1",
+       "security_groups": [],
+       "self": false,
+       "to_port": 0
+      }
+     ],
+     "id": "sg-08fe9627476cdad8b",
+     "ingress": [
+      {
+       "cidr_blocks": [],
+       "description": "",
+       "from_port": 0,
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "protocol": "-1",
+       "security_groups": [
+        "sg-0cc4661b5a4e1bc6a"
+       ],
+       "self": false,
+       "to_port": 0
+      }
+     ],
+     "name": "terraform-20240730054510625400000003",
+     "name_prefix": "terraform-",
+     "owner_id": "767398123553",
+     "revoke_rules_on_delete": false,
+     "tags": {},
+     "tags_all": {},
+     "timeouts": null,
+     "vpc_id": "vpc-00b90228bcacafe5a"
+    },
+    "before_sensitive": {
+     "egress": [
+      {
+       "cidr_blocks": [
+        false
+       ],
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "security_groups": []
+      }
+     ],
+     "ingress": [
+      {
+       "cidr_blocks": [],
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "security_groups": [
+        false
+       ]
+      }
+     ],
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "name": "knowledgebase-test-service_security_group",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_security_group"
+  },
+  {
+   "address": "null_resource.image",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "id": "7790535555631926185",
+     "triggers": {
+      "hash": "c2dee6706a1ca23ca60788757dbb1436"
+     }
+    },
+    "after_sensitive": {
+     "triggers": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "id": "7790535555631926185",
+     "triggers": {
+      "hash": "c2dee6706a1ca23ca60788757dbb1436"
+     }
+    },
+    "before_sensitive": {
+     "triggers": {}
+    }
+   },
+   "mode": "managed",
+   "name": "image",
+   "provider_name": "registry.terraform.io/hashicorp/null",
+   "type": "null_resource"
+  }
+ ],
+ "terraform_version": "1.9.1",
+ "timestamp": "2024-07-30T08:10:53Z"
+}]

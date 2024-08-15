@@ -1,4 +1,4 @@
-variable "subnets" {
+variable "public_subnet_ids" {
   type        = set(string)
   description = "List of subnets to deploy the ALB"
 }

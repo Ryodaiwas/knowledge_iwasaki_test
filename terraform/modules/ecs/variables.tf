@@ -10,8 +10,14 @@ variable "security_group_id" {
 variable "target_group_arn" {
   type = string
 }
-variable "subnets" {
+variable "private_subnet_ids" {
   type = set(string)
 }
+# variable "lb_listener" {
+#   type = any
+# }
 
-
+variable "vpc_id" {
+  type        = string
+  description = "VPC ID to deploy the ECS"
+}

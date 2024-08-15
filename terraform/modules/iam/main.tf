@@ -1,4 +1,5 @@
-data "aws_iam_policy_document" "assume_role_policy" {
+# Assume Roleポリシードキュメントの作成
+data "aws_iam_policy_document" "ecs_task_assume_role_policy" {
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -9,14 +10,14 @@ data "aws_iam_policy_document" "assume_role_policy" {
   }
 }
 
-# creating an iam role with needed permissions to execute tasks
-resource "aws_iam_role" "ecsTaskExecutionRole" {
-  name               = "ecsTaskExecutionRole"
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+# タスクの実行に必要な権限を持つIAMロールの作成
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name               = "ecs_task_execution_role"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_role_policy.json
 }
 
-# attaching AmazonECSTaskExecutionRolePolicy to ecsTaskExecutionRole
-resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
-  role       = aws_iam_role.ecsTaskExecutionRole.name
+# AmazonECSTaskExecutionRolePolicyをecs_task_execution_roleにアタッチ
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy_attachment" {
+  role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }

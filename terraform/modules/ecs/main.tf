@@ -1,14 +1,15 @@
-resource "aws_ecs_cluster" "knowledgebase-test-cluster" {
-  name = "knowledgebase-test-cluster" # Naming the cluster
+# ECSクラスターの作成
+resource "aws_ecs_cluster" "knowledgebase_cluster" {
+  name = "knowledgebase-cluster" # クラスターの名前
 }
 
-
-resource "aws_ecs_task_definition" "knowledgebase-test-task-test" {
-  family                   = "knowledgebase-test-task-test" # Naming our first task
+# ECSタスク定義の作成
+resource "aws_ecs_task_definition" "knowledgebase_task_definition" {
+  family                   = "knowledgebase-task" # タスクの名前
   container_definitions    = <<DEFINITION
   [
     {
-      "name": "knowledgebase-test-container",
+      "name": "knowledgebase-container",
       "image": "${var.ecr_repository_url}",  
       "essential": true,
       "portMappings": [
@@ -22,49 +23,51 @@ resource "aws_ecs_task_definition" "knowledgebase-test-task-test" {
     }
   ]
   DEFINITION
-  requires_compatibilities = ["FARGATE"]      # Stating that we are using ECS Fargate
-  network_mode             = "awsvpc"         # Using awsvpc as our network mode as this is required for Fargate
-  memory                   = 512              # Specifying the memory our task requires
-  cpu                      = 256              # Specifying the CPU our task requires
-  execution_role_arn       = var.iam_role_arn # Stating Amazon Resource Name (ARN) of the execution role
+  requires_compatibilities = ["FARGATE"]      # Fargateを使用
+  network_mode             = "awsvpc"         # awsvpcネットワークモード
+  memory                   = 512              # タスクのメモリ
+  cpu                      = 256              # タスクのCPU
+  execution_role_arn       = var.iam_role_arn # 実行ロールのARN
 }
 
-
-# Creating the service
-resource "aws_ecs_service" "knowledgebase-test-service" {
-  name            = "knowledgebase-test-service"
-  cluster         = aws_ecs_cluster.knowledgebase-test-cluster.id            # Referencing our created Cluster
-  task_definition = aws_ecs_task_definition.knowledgebase-test-task-test.arn # Referencing the task our service will spin up
+# ECSサービスの作成
+resource "aws_ecs_service" "knowledgebase_ecs_service" {
+  name            = "knowledgebase-service"
+  cluster         = aws_ecs_cluster.knowledgebase_cluster.id                  # クラスターの参照
+  task_definition = aws_ecs_task_definition.knowledgebase_task_definition.arn # タスク定義の参照
   launch_type     = "FARGATE"
-  desired_count   = 3 # Setting the number of containers we want deployed to 3
+  desired_count   = 3 # コンテナのデプロイ数
+  # depends_on      = [var.lb_listener]
 
   load_balancer {
-    target_group_arn = var.target_group_arn # Referencing our target group
-    container_name   = "knowledgebase-test-container"
-    container_port   = 3000 # Specifying the container port
+    target_group_arn = var.target_group_arn # ターゲットグループの参照
+    container_name   = "knowledgebase-container"
+    container_port   = 3000 # コンテナポートの指定
   }
 
   network_configuration {
-    subnets          = var.subnets                                                            # Referencing the subnets
-    assign_public_ip = true                                                                   # Providing our containers with public IPs
-    security_groups  = ["${aws_security_group.knowledgebase-test-service_security_group.id}"] # Setting the security group
+    subnets          = var.private_subnet_ids                           # サブネットの参照
+    assign_public_ip = true                                             # パブリックIPの割り当て
+    security_groups  = [aws_security_group.knowledgebase_service_sg.id] # セキュリティグループの設定
   }
 }
 
-# Creating a security group for the service
-resource "aws_security_group" "knowledgebase-test-service_security_group" {
+# ECSサービス用セキュリティグループの作成
+resource "aws_security_group" "knowledgebase_service_sg" {
+  vpc_id = var.vpc_id
+
   ingress {
     from_port = 0
     to_port   = 0
     protocol  = "-1"
-    # Only allowing traffic in from the load balancer security group
+    # ロードバランサーのセキュリティグループからのトラフィックのみ許可
     security_groups = [var.security_group_id]
   }
 
   egress {
-    from_port   = 0             # Allowing any incoming port
-    to_port     = 0             # Allowing any outgoing port
-    protocol    = "-1"          # Allowing any outgoing protocol 
-    cidr_blocks = ["0.0.0.0/0"] # Allowing traffic out to all IP addresses
+    from_port   = 0             # すべてのインバウンドポートを許可
+    to_port     = 0             # すべてのアウトバウンドポートを許可
+    protocol    = "-1"          # すべてのアウトバウンドプロトコルを許可
+    cidr_blocks = ["0.0.0.0/0"] # すべてのIPアドレスへのトラフィックを許可
   }
 }

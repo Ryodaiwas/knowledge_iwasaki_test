@@ -1,10 +1,14 @@
-output "subnets" {
+
+output "public_subnet_ids" {
   value = [
-    aws_default_subnet.default_subnet_a.id,
-    aws_default_subnet.default_subnet_d.id,
-    aws_default_subnet.default_subnet_c.id
+    for subnet in aws_subnet.public : subnet.id
+  ]
+}
+output "private_subnet_ids" {
+  value = [
+    for subnet in aws_subnet.private : subnet.id
   ]
 }
 output "vpc_id" {
-  value = aws_default_vpc.default_vpc.id
+  value = aws_vpc.main.id
 }
