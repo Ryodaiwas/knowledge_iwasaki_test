@@ -5,6 +5,14 @@ terraform {
       version = "~> 5.60.0" #AWSバージョンの固定
     }
   }
+  cloud {
+    organization = "deploy-test"
+    hostname     = "app.terraform.io"
+
+    workspaces {
+      name = "knowledgebase-test-1"
+    }
+  }
 
   required_version = ">= 1.2.0" # Terraformバージョンの固定
 }

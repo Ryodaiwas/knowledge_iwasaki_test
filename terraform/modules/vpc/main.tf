@@ -124,4 +124,4 @@ resource "aws_route" "igw" {
   destination_cidr_block = "0.0.0.0/0"
 }
 
-# NATゲートウェイなくても動くから現状はALBとECSの紐付けに専念
+
